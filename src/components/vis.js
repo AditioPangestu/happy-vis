@@ -25,25 +25,7 @@ class Vis extends Component {
       adjust_viewed_location: ["all"], //By color
       adjust_viewed_time: ["all"], //By color
     };
-    this.handleMouseOver = this.handleMouseOver.bind(this);
-    this.onZoomIn = this.onZoomIn.bind(this);
-    this.onZoomOut = this.onZoomOut.bind(this);
-    this.onPanLeft = this.onPanLeft.bind(this);
-    this.onPanRight = this.onPanRight.bind(this);
-    this.onResetZoom = this.onResetZoom.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onWheel = this.onWheel.bind(this);
-    this.onResetViewedCharacter = this.onResetViewedCharacter.bind(this);
-    this.onAddViewedCharacter = this.onAddViewedCharacter.bind(this);
-    this.onHideAllCharacter = this.onHideAllCharacter.bind(this);
-    this.onResetViewedLocation = this.onResetViewedLocation.bind(this);
-    this.onAddViewedLocation = this.onAddViewedLocation.bind(this);
-    this.onHideAllLocation = this.onHideAllLocation.bind(this);
-    this.onResetViewedTime = this.onResetViewedTime.bind(this);
-    this.onAddViewedTime = this.onAddViewedTime.bind(this);
-    this.onHideAllTime = this.onHideAllTime.bind(this);
+   
   }
 
   componentWillMount(){
