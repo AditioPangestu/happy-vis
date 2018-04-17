@@ -2,11 +2,12 @@ import React, {Component} from "react";
 import axios from "axios";
 import _ from "lodash";
 
-import StoryCurve from "./story-curve";
-import CharacterVis from "./character-vis";
-import LocationVis from "./location-vis";
-import TimeVis from "./time-vis";
-import StoryDetailContainer from "./story-detail-container";
+import {
+  ComposableMap,
+  ZoomableGroup,
+  Geographies,
+  Geography,
+} from "react-simple-maps"
 
 class Vis extends Component {
   constructor(props){
@@ -24,21 +25,31 @@ class Vis extends Component {
       adjust_viewed_character: ["all"], //By color
       adjust_viewed_location: ["all"], //By color
       adjust_viewed_time: ["all"], //By color
+      world_map: {},
     };
    
   }
 
   componentWillMount(){
-    axios.get("./src/data/simple.json")
-      .then((response)=>{
-        var { data }  = response;
+    // axios.get("./src/data/simple.json")
+    //   .then((response)=>{
+    //     var { data }  = response;
+    //     this.setState({
+    //       ...this.state,
+    //       story_detail_data: data,
+    //       data: data.events.sort((a, b) => { return a.y - b.y }),
+    //       current_x_window: data.events.length,
+    //       default_x_window: data.events.length,
+    //     });
+
+    //   })
+    axios.get('./src/data/world-50m.json')
+      .then((response) => {
+        const data = response;
         this.setState({
           ...this.state,
-          story_detail_data: data,
-          data: data.events.sort((a, b) => { return a.y - b.y }),
-          current_x_window: data.events.length,
-          default_x_window: data.events.length,
-        });
+          world_map: data
+        })
       })
   }
 
@@ -388,6 +399,66 @@ class Vis extends Component {
           </div>
         </section>
       );
+    } else if (!_.isEmpty(this.state.world_map)) {
+      return (
+        <section className="section">
+          {/* <div style={{
+            width: "800" + "px",
+            // maxheight: "600" + "px",
+          }}> */}
+          <div>
+            <ComposableMap
+              projectionConfig={{
+                scale: 147.28,
+                rotation: [-11, 0, 0],
+              }}
+              width={700}
+              height={385.58}
+              // style={{
+              //   width: "75%",
+              //   height: "auto",
+              // }}
+            >
+              <ZoomableGroup center={[0, 20]} >
+                <Geographies geography="./src/data/world-50m.json">
+                  {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
+                    <Geography
+                      key={i}
+                      geography={geography}
+                      projection={projection}
+                      style={{
+                        default: {
+                          fill: "#ECEFF1",
+                          stroke: "#607D8B",
+                          strokeWidth: 0.75,
+                          outline: "none",
+                        },
+                        hover: {
+                          fill: "#607D8B",
+                          stroke: "#607D8B",
+                          strokeWidth: 0.75,
+                          outline: "none",
+                        },
+                        pressed: {
+                          fill: "#FF5722",
+                          stroke: "#607D8B",
+                          strokeWidth: 0.75,
+                          outline: "none",
+                        },
+                      }}
+                    />
+                  ))}
+                </Geographies>
+              </ZoomableGroup>
+            </ComposableMap>
+          </div>
+          
+          <div>
+            asdf<br />
+            asdf<br />
+          </div>
+        </section>
+      )
     } else {
       return (
         <div>
