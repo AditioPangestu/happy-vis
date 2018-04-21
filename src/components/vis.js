@@ -95,6 +95,7 @@ class Vis extends Component {
     if (!_.isEmpty(this.state.data)){
       return (
         <section className="section">
+<<<<<<< HEAD
           <div className="columns is-gapless">
             <div className="column is-9"
               style={{
@@ -135,6 +136,19 @@ class Vis extends Component {
                           y_domain={this.state.data.aggregates[i].max_value}/>
                       </div>
                     );
+=======
+          <div className="columns">
+            <div className="column is-9">
+              <GeneralMap />
+              <BubbleVis
+                width={this.state.width}
+                height={200}
+                data={_.map(this.state.data,(datum)=>{
+                  return {
+                    x : datum.long,
+                    y : datum.lat,
+                    size: datum.gdp
+>>>>>>> cbd42fab76ed9a7c82ba6cc2eae1a66b50aecedc
                   }
                   return bubbles;
                 })()}
