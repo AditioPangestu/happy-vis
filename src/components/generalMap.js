@@ -13,6 +13,7 @@ import {
 
 import { Motion, spring } from "react-motion"
 
+import tooltip from "wsdm-tooltip"
 
 
 class GeneralMap extends Component {
@@ -23,7 +24,32 @@ class GeneralMap extends Component {
       center: [0, 20],
       zoom: 1,
       world_map: {},
-      continents: []
+      continents: [],
+      default_style: {
+        default: {
+          fill: "#ECEFF1",
+          stroke: "#607D8B",
+          strokeWidth: 0.1,
+          outline: "none",
+        },
+        hover: {
+          fill: "#607D8B",
+          stroke: "#607D8B",
+          strokeWidth: 0.1,
+          outline: "none",
+        },
+        pressed: {
+          fill: "#FF5722",
+          stroke: "#607D8B",
+          strokeWidth: 0.1,
+          outline: "none",
+        },
+      },
+      // country_styles: [
+      //   {
+      //     name: 
+      //   }
+      // ]
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this)
@@ -31,6 +57,35 @@ class GeneralMap extends Component {
     this.handleContinentClick = this.handleContinentClick.bind(this)
     this.handleReset = this.handleReset.bind(this)
 
+    this.handleMove = this.handleMove.bind(this)
+    this.handleLeave = this.handleLeave.bind(this)
+  }
+
+  handleMove(geography, evt) {
+    const x = evt.clientX
+    const y = evt.clientY + window.pageYOffset
+    const mapping = {
+      'Russia': '#deadbeef'
+    }
+      this.tip.show(`
+        <div class="tooltip-inner">
+          ${geography.properties.name == 'Russia' ? mapping[geography.properties.name] : '#fffff'}
+        </div>
+      `)
+      // {
+
+      //   origin: { x, y },
+      //   content: ,
+      // })
+      this.tip.position({
+        pageX: x,
+        pageY: y
+      })
+  }
+  handleLeave() {
+    // this.props.dispatch(hide())
+    // this.props.hide()
+    this.tip.hide();
   }
 
   handleZoomIn() {
@@ -76,6 +131,10 @@ class GeneralMap extends Component {
       })
   }
 
+  componentDidMount() {
+    this.tip = tooltip();
+    this.tip.create()
+  }
   
   
   render() {
@@ -96,7 +155,7 @@ class GeneralMap extends Component {
           )}
           <button onClick={this.handleReset}>Reset</button>
 
-          <Motion
+          {/* <Motion
             defaultStyle={{
               zoom: 1,
               x: 0,
@@ -107,8 +166,8 @@ class GeneralMap extends Component {
               x: spring(this.state.center[0], { stiffness: 210, damping: 20 }),
               y: spring(this.state.center[1], { stiffness: 210, damping: 20 }),
             }}
-          >
-          {({zoom,x,y}) => (
+          > */}
+          {/* {({zoom,x,y}) => ( */}
             <ComposableMap
               projectionConfig={{
                 scale: 147.28,
@@ -121,40 +180,26 @@ class GeneralMap extends Component {
             //   height: "auto",
             // }}
             >
-              <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning>
+              <ZoomableGroup center={this.state.center} zoom={this.state.zoom} disablePanning>
                 <Geographies geography="./src/data/world-50m.json" >
                   {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
-                    <Geography
-                      key={i}
-                      geography={geography}
-                      projection={projection}
-                      style={{
-                        default: {
-                          fill: "#ECEFF1",
-                          stroke: "#607D8B",
-                          strokeWidth: 0.1,
-                          outline: "none",
-                        },
-                        hover: {
-                          fill: "#607D8B",
-                          stroke: "#607D8B",
-                          strokeWidth: 0.1,
-                          outline: "none",
-                        },
-                        pressed: {
-                          fill: "#FF5722",
-                          stroke: "#607D8B",
-                          strokeWidth: 0.1,
-                          outline: "none",
-                        },
-                      }}
-                    />
+                      
+                      <Geography
+                        key={i}
+                        geography={geography}
+                        projection={projection}
+                        onMouseMove={this.handleMove}
+                        onMouseLeave={this.handleLeave}
+                        style={}
+                      />
                   ))}
                 </Geographies>
-                
+                {/* <Graticule /> */}
               </ZoomableGroup>
-            </ComposableMap>)}
-          </Motion>
+            </ComposableMap>
+            {/* <Tooltip /> */}
+            {/* )} */}
+          {/* </Motion> */}
         </div>
       );
     } else {
@@ -168,4 +213,23 @@ class GeneralMap extends Component {
   }
 }
 
+// function mapStateToProps(state) {
+//   return {
+//     tooltip: state.tooltip
+//   }
+// }
+
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     show: () => {
+//       dispatch(show());
+//     },
+//     hide: () => {
+//       dispatch(hide());
+//     }
+//   }
+// }
+
+// export default withRedux(store)(GeneralMap);
+// export default connect(mapStateToProps, mapDispatchToProps)(GeneralMap);
 export default GeneralMap;

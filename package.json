@@ -38,6 +38,8 @@
     "react-scroll-to": "^1.1.2",
     "react-simple-maps": "^0.12.0",
     "react-vis": "^1.9.2",
-    "redux": "^3.0.4"
+    "redux": "^3.0.4",
+    "redux-tooltip": "^0.7.2",
+    "wsdm-tooltip": "^0.1.2"
   }
 }
