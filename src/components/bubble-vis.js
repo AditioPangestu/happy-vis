@@ -27,48 +27,57 @@ export default class BubbleVis extends Component {
     first = true
   */
 
- constructor(props) {
-   super(props);
-   this.state = {
-     ticks : [{
-       name : "name",
-       value : .5
-     }],
-     preprocessed_data : [
-       {
-         x0: 0,
-         x: 1,
-         y: 3
-       }
-     ]
-   }
- }
+  constructor(props) {
+    super(props);
+    this.state = {
+      preprocessed_data : [
+        {
+          x0: 0,
+          x: 1,
+          y: 3
+        }
+      ]
+    }
+  }
+
+  componentWillMount(){
+    this.setState({
+      ...this.state,
+      preprocessed_data: this.preprocessedData(this.props.data)
+    })
+  }
+
+  preprocessedData(data){
+    var preprocessed_data = [];
+    var ticks = [];
+    for(var i=0;i<data.length;i++){
+      const datum = data[i];
+      preprocessed_data.push({
+        x0:i,
+        x:(i+1),
+        y:datum.value,
+        color: datum.color
+      });
+    }
+    return preprocessed_data;
+  }
 
   render(){
     
     return (
       <XYPlot
-        yDomain={[0, 2]}
+        colorType="literal"
+        yDomain={[0, this.props.y_domain]}
         width={230}
-        height={75}
+        height={95}
         margin={{ top: 10, bottom: 10 }}
         stackBy="y">
         <VerticalGridLines />
         <HorizontalGridLines />
-        <YAxis />
+        <YAxis tickTotal={2}/>
         <VerticalRectSeries
-          data={[
-            { x0: 1, x: 2, y: 10 },
-            { x0: 2, x: 4, y: 5 },
-            { x0: 5, x: 6, y: 15 }
-          ]}
+          data={this.state.preprocessed_data}
         />
-        <VerticalRectSeries
-          data={[
-            { x0: 1, x: 2, y: 12 },
-            { x0: 2, x: 4, y: 2 },
-            { x0: 5, x: 6, y: 15 }
-          ]} />
       </XYPlot>
     );
   }

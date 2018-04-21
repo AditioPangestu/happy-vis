@@ -1,3 +1,9 @@
 .section {
   padding-top: 1rem;
+  padding-bottom: 0;
+}
+
+.title__bar {
+  font-weight: 600;
+  margin-left: 2.5rem;
 }

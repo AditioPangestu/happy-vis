@@ -10,7 +10,7 @@ class Vis extends Component {
     this.state = { 
       data_2015 : {
         raw : [],
-        agregate : [{
+        aggregates : [{
           data : [{
             name : "name",
             value : 0
@@ -49,13 +49,14 @@ class Vis extends Component {
           ...this.state,
           continents: continents
         })
+        console.log("continents", response.data);
         axios.get('./src/data/processed_2015.json')
-          .then((response) => {
-            const { data } = response;
-            this.setState({
-              ...this.state,
-              data: this.preproccesData(data, continents)
-            })
+        .then((response) => {
+          const { data } = response;
+          this.setState({
+            ...this.state,
+            data: {raw:data, aggregates:this.preproccesData(data, continents)}
+          })
           });
       });
   }
@@ -68,126 +69,80 @@ class Vis extends Component {
 
   preproccesData(data, continents){
     var atribut_names = ["generosity", "trust", "freedom", "life_expectancy", "family", "gdp"]
-    var agregates = [];
+    var atribut_reader_names = ["Generosity", "Trust", "Freedom", "Life Expectancy", "Family", "GDP"]
+    var aggregates = [];
     for (var i = 0; i < atribut_names.length;i++){
-      var agregate = {}
-      agregate.attribute_name = atribut_names[i];
-      agregate.data = [];
-      agregate.max_value = parseFloat(_.maxBy(data,(datum)=>{
-        return parseFloat(datum[agregate.attribute_name]);
-      })[agregate.attribute_name]);
+      var aggregate = {}
+      aggregate.attribute_name = atribut_names[i];
+      aggregate.name = atribut_reader_names[i];
+      aggregate.data = [];
+      aggregate.max_value = parseFloat(_.maxBy(data,(datum)=>{
+        return parseFloat(datum[aggregate.attribute_name]);
+      })[aggregate.attribute_name]);
       for(var j = 0; j < continents.length;j++){
         var continent = {};
         continent.name = continents[j].name;
-        continent.value = this.meanContinent(data, agregate.attribute_name, continent.name);
-        agregate.data.push(continent);
+        continent.color = continents[j].color;
+        continent.value = this.meanContinent(data, aggregate.attribute_name, continent.name);
+        aggregate.data.push(continent);
       }
-      agregates.push(agregate);
+      aggregates.push(aggregate);
     }
-    console.log(agregates);
+    return aggregates;
   }
 
   render(){
-    if (this.state.data.length){
+    if (!_.isEmpty(this.state.data)){
       return (
         <section className="section">
-          <div className="columns">
+          <div className="columns is-gapless">
             <div className="column is-9"
               style={{
                 width:"700px"
               }}>
               <GeneralMap />
-              <div className="columns is-gapless is-marginless">
-                <div className="column">
-                  <p>Cek</p>
-                  <BubbleVis
-                    first={true}
-                    width={this.state.width}
-                    height={400}
-                    data={_.map(this.state.data,(datum)=>{
-                      return {
-                        x : parseFloat(datum.long),
-                        y: parseFloat(datum.lat),
-                        size: parseFloat(datum.gdp)
-                      }
-                    })}/>
-                </div>
-                <div className="column">
-                  <p>Makan</p>
-                  <BubbleVis
-                    first={true}
-                    width={this.state.width}
-                    height={400}
-                    data={_.map(this.state.data, (datum) => {
-                      return {
-                        x: parseFloat(datum.long),
-                        y: parseFloat(datum.lat),
-                        size: parseFloat(datum.gdp)
-                      }
-                    })} />
-                </div>
-                <div className="column">
-                  <p>Makan</p>
-                  <BubbleVis
-                    first={true}
-                    width={this.state.width}
-                    height={400}
-                    data={_.map(this.state.data, (datum) => {
-                      return {
-                        x: parseFloat(datum.long),
-                        y: parseFloat(datum.lat),
-                        size: parseFloat(datum.gdp)
-                      }
-                    })} />
-                </div>
+              <div className="columns is-gapless is-marginless">                
+                {(()=>{
+                  var bubbles = [];
+                  for (var i=0;i<3;i++){
+                    bubbles.push(
+                      <div key={i} className="column">
+                        <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p>
+                        <BubbleVis
+                          first={true}
+                          width={this.state.width}
+                          height={400}
+                          data={this.state.data.aggregates[i].data}
+                          y_domain={this.state.data.aggregates[i].max_value}/>
+                      </div>
+                    );
+                  }
+                  return bubbles;
+                })()}
               </div>
-              <div className="columns is-gapless">
-                <div className="column">
-                  <p>Cek</p>
-                  <BubbleVis
-                    width={this.state.width}
-                    height={400}
-                    data={_.map(this.state.data,(datum)=>{
-                      return {
-                        x : parseFloat(datum.long),
-                        y: parseFloat(datum.lat),
-                        size: parseFloat(datum.gdp)
-                      }
-                    })}/>
-                </div>
-                <div className="column">
-                  <p>Makan</p>
-                  <BubbleVis
-                    first={false}
-                    width={this.state.width}
-                    height={400}
-                    data={_.map(this.state.data, (datum) => {
-                      return {
-                        x: parseFloat(datum.long),
-                        y: parseFloat(datum.lat),
-                        size: parseFloat(datum.gdp)
-                      }
-                    })} />
-                </div>
-                <div className="column">
-                  <p>Makan</p>
-                  <BubbleVis
-                    first={false}
-                    width={this.state.width}
-                    height={400}
-                    data={_.map(this.state.data, (datum) => {
-                      return {
-                        x: parseFloat(datum.long),
-                        y: parseFloat(datum.lat),
-                        size: parseFloat(datum.gdp)
-                      }
-                    })} />
-                </div>
+              <div className="columns is-gapless is-marginless">                
+                {(()=>{
+                  var bubbles = [];
+                  for (var i=3;i<6;i++){
+                    bubbles.push(
+                      <div key={i} className="column">
+                        <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p>
+                        <BubbleVis
+                          first={true}
+                          width={this.state.width}
+                          height={400}
+                          data={this.state.data.aggregates[i].data}
+                          y_domain={this.state.data.aggregates[i].max_value}/>
+                      </div>
+                    );
+                  }
+                  return bubbles;
+                })()}
               </div>
             </div>
-            <div className="column is-3">
+            <div className="column">
               
-          </div>
+            </div>
           </div>
         </section>
       );
