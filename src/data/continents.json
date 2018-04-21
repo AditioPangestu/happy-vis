@@ -1,0 +1,44 @@
+{
+  "data": [
+    {
+      "name": "Eastern Asia", 
+      "coordinate": [7.785305, 81.427898]
+    },
+    {
+      "name": "Western Europe", 
+      "coordinate": [55.012153, -3.446869]
+    },
+    {
+      "name": "Southeastern Asia", 
+      "coordinate": [6.643209, 125.346722]
+    },
+    {
+      "name": "North America", 
+      "coordinate": [54.525961, -105.255119]
+    },
+    {
+      "name": "Sub-Saharan Africa", 
+      "coordinate": [6.557404, 28.299435]
+    },
+    {
+      "name": "Southern Asia", 
+      "coordinate": [25.03764, 76.456309]
+    },
+    {
+      "name": "Central and Eastern Europe", 
+      "coordinate": [52.232679, 21.014944]
+    },
+    {
+      "name": "Latin America and Caribbean", 
+      "coordinate": [-8.783195, -55.491477]
+    },
+    {
+      "name": "Middle East and Northern Africa", 
+      "coordinate": [31.41565, 35.0715]
+    },
+    {
+      "name": "Australia and New Zealand", 
+      "coordinate": [-29.532804, 145.491477]
+    }
+  ]
+}
