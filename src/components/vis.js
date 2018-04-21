@@ -100,13 +100,14 @@ class Vis extends Component {
             <div className="columns is-gapless is-marginless">
               <div className="column is-9"
                 style={{
-                  width:"600px"
+                  width:"700px"
                 }}>
+                <GeneralMap />
+                
+              </div>
+              <div className="column">
                 <div className="content">
                   <p className="title is-4">World Happiness Score</p>
-                </div>
-                <GeneralMap />
-                <div className="content">
                   <div className="field is-horizontal">
                     <div className="field-label is-small">
                       <label className="label">Continent</label>
@@ -134,27 +135,26 @@ class Vis extends Component {
                   </div>
                 </div>
               </div>
-              <div className="column">
-                {(() => {
-                  var bubbles = [];
-                  for (var i = 0; i < 6; i++) {
-                    bubbles.push(
-                      <div key={i}>
-                        {/* <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p> */}
-                        <BubbleVis
-                          last={i==5}
-                          name={this.state.data.aggregates[i].name}
-                          first={true}
-                          width={this.state.width}
-                          height={400}
-                          data={this.state.data.aggregates[i].data}
-                          y_domain={this.state.data.aggregates[i].max_value} />
-                      </div>
-                    );
-                  }
-                  return bubbles;
-                })()}
-              </div>
+            </div>
+            <div className="columns is-gapless is-marginless">
+              {(() => {
+                var bubbles = [];
+                for (var i = 0; i < 6; i++) {
+                  bubbles.push(
+                    <div className="column" key={i}>
+                      <p className={"is-size-7 title__bar "+((i==0)?"is-first":"")}>{this.state.data.aggregates[i].name} Score</p>
+                      <BubbleVis
+                        first={i == 0}
+                        name={this.state.data.aggregates[i].name}
+                        width={this.state.width}
+                        height={400}
+                        data={this.state.data.aggregates[i].data}
+                        y_domain={this.state.data.aggregates[i].max_value} />
+                    </div>
+                  );
+                }
+                return bubbles;
+              })()}
             </div>
           </section>
         </div>
