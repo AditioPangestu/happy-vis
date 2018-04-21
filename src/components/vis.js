@@ -1,13 +1,7 @@
 import React, {Component} from "react";
 import axios from "axios";
 import _ from "lodash";
-
-import {
-  ComposableMap,
-  ZoomableGroup,
-  Geographies,
-  Geography,
-} from "react-simple-maps"
+import GeneralMap from "./generalMap";
 
 class Vis extends Component {
   constructor(props){
@@ -43,6 +37,7 @@ class Vis extends Component {
     //     });
 
     //   })
+
     axios.get('./src/data/world-50m.json')
       .then((response) => {
         const data = response;
@@ -402,56 +397,8 @@ class Vis extends Component {
     } else if (!_.isEmpty(this.state.world_map)) {
       return (
         <section className="section">
-          {/* <div style={{
-            width: "800" + "px",
-            // maxheight: "600" + "px",
-          }}> */}
-          <div>
-            <ComposableMap
-              projectionConfig={{
-                scale: 147.28,
-                rotation: [-11, 0, 0],
-              }}
-              width={700}
-              height={385.58}
-              // style={{
-              //   width: "75%",
-              //   height: "auto",
-              // }}
-            >
-              <ZoomableGroup center={[0, 20]} >
-                <Geographies geography="./src/data/world-50m.json">
-                  {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
-                    <Geography
-                      key={i}
-                      geography={geography}
-                      projection={projection}
-                      style={{
-                        default: {
-                          fill: "#ECEFF1",
-                          stroke: "#607D8B",
-                          strokeWidth: 0.75,
-                          outline: "none",
-                        },
-                        hover: {
-                          fill: "#607D8B",
-                          stroke: "#607D8B",
-                          strokeWidth: 0.75,
-                          outline: "none",
-                        },
-                        pressed: {
-                          fill: "#FF5722",
-                          stroke: "#607D8B",
-                          strokeWidth: 0.75,
-                          outline: "none",
-                        },
-                      }}
-                    />
-                  ))}
-                </Geographies>
-              </ZoomableGroup>
-            </ComposableMap>
-          </div>
+          
+          <GeneralMap />
           
           <div>
             asdf<br />
