@@ -60,7 +60,7 @@ export default class BubbleVis extends Component {
     var preprocessed_data = [];
     var ticks = [];
     var gap = this.props.y_domain/5;
-    for(var i=0;i<5;i++){
+    for(var i=0;i<6;i++){
       var tick = {};
       tick.name = i*gap;
       tick.value = i*gap;
@@ -92,10 +92,10 @@ export default class BubbleVis extends Component {
         margin={{ top: 10, bottom: 10 }}
         stackBy="y">
         <VerticalGridLines />
-        <HorizontalGridLines />
+        <HorizontalGridLines 
+          tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
         <YAxis 
-          tickValue={_.map(this.state.ticks, (tick)=>{return tick.value})}
-          />
+          tickValues={_.map(this.state.ticks, (tick)=>{return tick.value})}/>
 
         <VerticalRectSeries
           data={this.state.preprocessed_data}
