@@ -38,6 +38,7 @@ class Vis extends Component {
         <section className="section">
           <div className="columns">
             <div className="column is-9">
+              <GeneralMap />
               <BubbleVis
                 width={this.state.width}
                 height={200}
