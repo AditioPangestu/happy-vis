@@ -1,9 +1,24 @@
 .section {
-  padding-top: 1rem;
-  padding-bottom: 0;
+  padding: 1rem 0 0;
 }
 
 .title__bar {
   font-weight: 600;
   margin-left: 2.5rem;
+}
+
+@media screen and (min-width: 769px), print {
+  .field-label {
+    margin-right: .5rem;
+  }
+}
+
+.rv-discrete-color-legend-item {
+  padding: .2rem 0rem;
+}
+
+.rv-xy-plot__axis__title text{
+  font-weight: 600;
+  font-size: 12px;
+  color: black;
 }

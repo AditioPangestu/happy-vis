@@ -3,6 +3,7 @@ import axios from "axios";
 import _ from "lodash";
 import GeneralMap from "./generalMap";
 import BubbleVis from "./bubble-vis";
+import Legends from "./legend";
 
 class Vis extends Component {
   constructor(props){
@@ -68,8 +69,8 @@ class Vis extends Component {
   }
 
   preproccesData(data, continents){
-    var atribut_names = ["generosity", "trust", "freedom", "life_expectancy", "family", "gdp"]
-    var atribut_reader_names = ["Generosity", "Trust", "Freedom", "Life Expectancy", "Family", "GDP"]
+    var atribut_names = ["life_expectancy", "generosity", "trust", "freedom", "family", "gdp"]
+    var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"]
     var aggregates = [];
     for (var i = 0; i < atribut_names.length;i++){
       var aggregate = {}
@@ -94,45 +95,60 @@ class Vis extends Component {
   render(){
     if (!_.isEmpty(this.state.data)){
       return (
-        <section className="section">
-          <div className="columns is-gapless">
-            <div className="column is-9"
-              style={{
-                width:"700px"
-              }}>
-              <GeneralMap />
-              <div className="columns is-gapless is-marginless">                
-                {(()=>{
-                  var bubbles = [];
-                  for (var i=0;i<3;i++){
-                    bubbles.push(
-                      <div key={i} className="column">
-                        <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p>
-                        <BubbleVis
-                          first={true}
-                          width={this.state.width}
-                          height={400}
-                          data={this.state.data.aggregates[i].data}
-                          y_domain={this.state.data.aggregates[i].max_value}/>
+        <div>
+          <section className="section">
+            <div className="columns is-gapless is-marginless">
+              <div className="column is-9"
+                style={{
+                  width:"600px"
+                }}>
+                <div className="content">
+                  <p className="title is-4">World Happiness Score</p>
+                </div>
+                <GeneralMap />
+                <div className="content">
+                  <div className="field is-horizontal">
+                    <div className="field-label is-small">
+                      <label className="label">Continent</label>
+                    </div>
+                    <div className="field-body">
+                      <div className="field is-narrow">
+                        <div className="control">
+                          <div className="select is-fullwidth is-small">
+                            <select>
+                              <option>All</option>
+                              <option>Eastern Asia</option>
+                              <option>Western Europe</option>
+                              <option>Southeastern Asia</option>
+                              <option>North America</option>
+                              <option>Sub-Saharan Africa</option>
+                              <option>Southern Asia</option>
+                              <option>Central and Eastern Europe</option>
+                              <option>Latin America and Caribbean</option>
+                              <option>Australia and New Zealand</option>
+                            </select>
+                          </div>
+                        </div>
                       </div>
-                    );
-                  }
-                  return bubbles;
-                })()}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="columns is-gapless is-marginless">                
-                {(()=>{
+              <div className="column">
+                {(() => {
                   var bubbles = [];
-                  for (var i=3;i<6;i++){
+                  for (var i = 0; i < 6; i++) {
                     bubbles.push(
-                      <div key={i} className="column">
-                        <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p>
+                      <div key={i}>
+                        {/* <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p> */}
                         <BubbleVis
+                          last={i==5}
+                          name={this.state.data.aggregates[i].name}
                           first={true}
                           width={this.state.width}
                           height={400}
                           data={this.state.data.aggregates[i].data}
-                          y_domain={this.state.data.aggregates[i].max_value}/>
+                          y_domain={this.state.data.aggregates[i].max_value} />
                       </div>
                     );
                   }
@@ -140,11 +156,8 @@ class Vis extends Component {
                 })()}
               </div>
             </div>
-            <div className="column">
-              
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
       );
     } else {
       return (
