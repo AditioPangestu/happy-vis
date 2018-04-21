@@ -2,43 +2,43 @@
   "data": [
     {
       "name": "Eastern Asia", 
-      "coordinates": [7.785305, 81.427898]
+      "coordinates": [ 81.427898, 7.785305]
     },
     {
       "name": "Western Europe", 
-      "coordinates": [55.012153, -3.446869]
+      "coordinates": [ -3.446869, 55.012153]
     },
     {
       "name": "Southeastern Asia", 
-      "coordinates": [6.643209, 125.346722]
+      "coordinates": [ 125.346722, 6.643209]
     },
     {
       "name": "North America", 
-      "coordinates": [54.525961, -105.255119]
+      "coordinates": [ -105.255119, 54.525961]
     },
     {
       "name": "Sub-Saharan Africa", 
-      "coordinates": [6.557404, 28.299435]
+      "coordinates": [ 28.299435, 6.557404]
     },
     {
       "name": "Southern Asia", 
-      "coordinates": [25.03764, 76.456309]
+      "coordinates": [ 76.456309, 25.03764]
     },
     {
       "name": "Central and Eastern Europe", 
-      "coordinates": [52.232679, 21.014944]
+      "coordinates": [ 21.014944, 52.232679]
     },
     {
       "name": "Latin America and Caribbean", 
-      "coordinates": [-8.783195, -55.491477]
+      "coordinates": [ -55.491477, -8.783195]
     },
     {
       "name": "Middle East and Northern Africa", 
-      "coordinates": [31.41565, 35.0715]
+      "coordinates": [ 35.0715, 31.41565]
     },
     {
       "name": "Australia and New Zealand", 
-      "coordinates": [-29.532804, 145.491477]
+      "coordinates": [ 145.491477, -29.532804]
     }
   ]
 }
