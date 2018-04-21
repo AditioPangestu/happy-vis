@@ -12,7 +12,8 @@
     },
     {
       "name": "Southeastern Asia", 
-      "coordinates": [6.643209, 125.346722]
+      "coordinates": [6.643209, 125.346722],
+      "color": "#ff8cab"
     },
     {
       "name": "North America", 
