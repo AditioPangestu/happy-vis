@@ -7,24 +7,77 @@ import {
   YAxis,
   VerticalGridLines,
   HorizontalGridLines,
-  MarkSeries
+  VerticalRectSeries,
 } from 'react-vis';
 
 export default class BubbleVis extends Component {
+
+  /*
+    Props
+    data = [datum]
+    datum = {
+      "name": "Eastern Asia",
+      "value": 1.234
+    }
+    highlighted_data = {
+      "name": "Turki",
+      "value": 1.45
+    }
+    xMax = 15
+    first = true
+  */
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      preprocessed_data : [
+        {
+          x0: 0,
+          x: 1,
+          y: 3
+        }
+      ]
+    }
+  }
+
+  componentWillMount(){
+    this.setState({
+      ...this.state,
+      preprocessed_data: this.preprocessedData(this.props.data)
+    })
+  }
+
+  preprocessedData(data){
+    var preprocessed_data = [];
+    var ticks = [];
+    for(var i=0;i<data.length;i++){
+      const datum = data[i];
+      preprocessed_data.push({
+        x0:i,
+        x:(i+1),
+        y:datum.value,
+        color: datum.color
+      });
+    }
+    return preprocessed_data;
+  }
+
   render(){
+    
     return (
       <XYPlot
-        width={this.props.width}
-        height={this.props.height}>
+        colorType="literal"
+        yDomain={[0, this.props.y_domain]}
+        width={230}
+        height={95}
+        margin={{ top: 10, bottom: 10 }}
+        stackBy="y">
         <VerticalGridLines />
         <HorizontalGridLines />
-        <XAxis />
-        <YAxis />
-        <MarkSeries
-          strokeWidth={2}
-          opacity="0.8"
-          sizeRange={[5, 15]}
-          data={this.props.data} />
+        <YAxis tickTotal={2}/>
+        <VerticalRectSeries
+          data={this.state.preprocessed_data}
+        />
       </XYPlot>
     );
   }
