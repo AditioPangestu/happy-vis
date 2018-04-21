@@ -196,20 +196,6 @@
 		"generosity": "0.22553"
 	},
 	{
-		"country": "Puerto Rico",
-		"long": "18.25",
-		"lat": "-66.5",
-		"region": "Latin America and Caribbean",
-		"happiness_rank": "15",
-		"happiness_score": "7.039",
-		"gdp": "1.35943",
-		"family": "1.08113",
-		"life_expectancy": "0.77758",
-		"freedom": "0.46823",
-		"trust": "0.12275",
-		"generosity": "0.22202"
-	},
-	{
 		"country": "Germany",
 		"long": "51",
 		"lat": "9",
@@ -476,20 +462,6 @@
 		"generosity": "0.15457"
 	},
 	{
-		"country": "Taiwan",
-		"long": "23.5",
-		"lat": "121",
-		"region": "Eastern Asia",
-		"happiness_rank": "34",
-		"happiness_score": "6.379",
-		"gdp": "1.39729",
-		"family": "0.92624",
-		"life_expectancy": "0.79565",
-		"freedom": "0.32377",
-		"trust": "0.0663",
-		"generosity": "0.25495"
-	},
-	{
 		"country": "Qatar",
 		"long": "25.5",
 		"lat": "51.25",
@@ -544,20 +516,6 @@
 		"freedom": "0.50379",
 		"trust": "0.08701",
 		"generosity": "0.28808"
-	},
-	{
-		"country": "Suriname",
-		"long": "4",
-		"lat": "-56",
-		"region": "Latin America and Caribbean",
-		"happiness_rank": "40",
-		"happiness_score": "6.269",
-		"gdp": "1.09686",
-		"family": "0.77866",
-		"life_expectancy": "0.50933",
-		"freedom": "0.52234",
-		"trust": "0.12692",
-		"generosity": "0.16665"
 	},
 	{
 		"country": "Kuwait",
@@ -714,20 +672,6 @@
 		"generosity": "0.10074"
 	},
 	{
-		"country": "Belize",
-		"long": "17.25",
-		"lat": "-88.75",
-		"region": "Latin America and Caribbean",
-		"happiness_rank": "52",
-		"happiness_score": "5.956",
-		"gdp": "0.87616",
-		"family": "0.68655",
-		"life_expectancy": "0.45569",
-		"freedom": "0.51231",
-		"trust": "0.10771",
-		"generosity": "0.23684"
-	},
-	{
 		"country": "Japan",
 		"long": "36",
 		"lat": "138",
@@ -799,8 +743,8 @@
 	},
 	{
 		"country": "South Korea",
-		"long": "0",
-		"lat": "0",
+		"long": "35.9",
+		"lat": "127.76",
 		"region": "Eastern Asia",
 		"happiness_rank": "57",
 		"happiness_score": "5.835",
@@ -1036,7 +980,7 @@
 		"generosity": "0.18434"
 	},
 	{
-		"country": "Hong Kong",
+		"country": "Hong Kong S.A.R., China",	
 		"long": "22.25",
 		"lat": "114.17",
 		"region": "Eastern Asia",
@@ -1048,20 +992,6 @@
 		"freedom": "0.48079",
 		"trust": "0.31647",
 		"generosity": "0.40097"
-	},
-	{
-		"country": "Somalia",
-		"long": "10",
-		"lat": "49",
-		"region": "Sub-Saharan Africa",
-		"happiness_rank": "76",
-		"happiness_score": "5.44",
-		"gdp": "0",
-		"family": "0.33613",
-		"life_expectancy": "0.11466",
-		"freedom": "0.56778",
-		"trust": "0.3118",
-		"generosity": "0.27225"
 	},
 	{
 		"country": "Kosovo",
@@ -1344,20 +1274,6 @@
 		"generosity": "0.25075"
 	},
 	{
-		"country": "Somaliland Region",
-		"long": "0",
-		"lat": "0",
-		"region": "Sub-Saharan Africa",
-		"happiness_rank": "97",
-		"happiness_score": "5.057",
-		"gdp": "0.25558",
-		"family": "0.75862",
-		"life_expectancy": "0.33108",
-		"freedom": "0.3913",
-		"trust": "0.36794",
-		"generosity": "0.51479"
-	},
-	{
 		"country": "Tunisia",
 		"long": "34",
 		"lat": "9",
@@ -1412,20 +1328,6 @@
 		"freedom": "0.35972",
 		"trust": "0.03285",
 		"generosity": "0.34539"
-	},
-	{
-		"country": "Laos",
-		"long": "0",
-		"lat": "0",
-		"region": "Southeastern Asia",
-		"happiness_rank": "102",
-		"happiness_score": "4.876",
-		"gdp": "0.68042",
-		"family": "0.5497",
-		"life_expectancy": "0.38291",
-		"freedom": "0.52168",
-		"trust": "0.22423",
-		"generosity": "0.43079"
 	},
 	{
 		"country": "Nigeria",
@@ -1499,8 +1401,8 @@
 	},
 	{
 		"country": "Palestinian Territories",
-		"long": "0",
-		"lat": "0",
+		"long": "31.95",
+		"lat": "35.2",
 		"region": "Middle East and Northern Africa",
 		"happiness_rank": "108",
 		"happiness_score": "4.754",
@@ -1566,20 +1468,6 @@
 		"freedom": "0.24856",
 		"trust": "0.13636",
 		"generosity": "0.19589"
-	},
-	{
-		"country": "Namibia",
-		"long": "-22",
-		"lat": "17",
-		"region": "Sub-Saharan Africa",
-		"happiness_rank": "113",
-		"happiness_score": "4.574",
-		"gdp": "0.93287",
-		"family": "0.70362",
-		"life_expectancy": "0.34745",
-		"freedom": "0.48614",
-		"trust": "0.10398",
-		"generosity": "0.07795"
 	},
 	{
 		"country": "Cameroon",
@@ -1737,8 +1625,8 @@
 	},
 	{
 		"country": "Congo (Kinshasa)",
-		"long": "0",
-		"lat": "0",
+		"long": "4",
+		"lat": "21.7",
 		"region": "Sub-Saharan Africa",
 		"happiness_rank": "125",
 		"happiness_score": "4.272",
@@ -1765,8 +1653,8 @@
 	},
 	{
 		"country": "Congo (Brazzaville)",
-		"long": "0",
-		"lat": "0",
+		"long": "0.22",
+		"lat": "15.82",
 		"region": "Sub-Saharan Africa",
 		"happiness_rank": "127",
 		"happiness_score": "4.236",
@@ -1918,20 +1806,6 @@
 		"generosity": "0.12425"
 	},
 	{
-		"country": "Comoros",
-		"long": "-12.17",
-		"lat": "44.25",
-		"region": "Sub-Saharan Africa",
-		"happiness_rank": "138",
-		"happiness_score": "3.956",
-		"gdp": "0.27509",
-		"family": "0.60323",
-		"life_expectancy": "0.29981",
-		"freedom": "0.15412",
-		"trust": "0.18437",
-		"generosity": "0.1827"
-	},
-	{
 		"country": "Ivory Coast",
 		"long": "0",
 		"lat": "0",
@@ -1986,20 +1860,6 @@
 		"freedom": "0.38041",
 		"trust": "0.17176",
 		"generosity": "0.2097"
-	},
-	{
-		"country": "South Sudan",
-		"long": "0",
-		"lat": "0",
-		"region": "Sub-Saharan Africa",
-		"happiness_rank": "143",
-		"happiness_score": "3.832",
-		"gdp": "0.39394",
-		"family": "0.18519",
-		"life_expectancy": "0.15781",
-		"freedom": "0.19662",
-		"trust": "0.13015",
-		"generosity": "0.25899"
 	},
 	{
 		"country": "Chad",
@@ -2073,8 +1933,8 @@
 	},
 	{
 		"country": "Tanzania",
-		"long": "0",
-		"lat": "0",
+		"long": "6.36",
+		"lat": "34.88",
 		"region": "Sub-Saharan Africa",
 		"happiness_rank": "149",
 		"happiness_score": "3.666",
@@ -2171,8 +2031,8 @@
 	},
 	{
 		"country": "Syria",
-		"long": "0",
-		"lat": "0",
+		"long": "34.8",
+		"lat": "38.99",
 		"region": "Middle East and Northern Africa",
 		"happiness_rank": "156",
 		"happiness_score": "3.069",
