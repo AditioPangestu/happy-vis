@@ -52,20 +52,20 @@ export default class BubbleVis extends Component {
       ticks,
       x_ticks,
       preprocessed_data
-    } = this.preprocessedData(this.props.data)
+    } = this.preprocessedData(this.props.data, this.props.y_domain)
     this.setState({
       ...this.state,
       preprocessed_data: preprocessed_data,
       ticks: ticks,
       x_ticks: x_ticks,
-    })
+    });
   }
 
-  preprocessedData(data){
+  preprocessedData(data, y_domain){
     var preprocessed_data = [];
     var ticks = [];
     var x_ticks = [];
-    var gap = this.props.y_domain/4;
+    var gap = y_domain/4;
     for(var i=0;i<5;i++){
       var tick = {};
       tick.name = i*gap;
@@ -91,6 +91,22 @@ export default class BubbleVis extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps){
+    if(!_.isEqual(this.props.data, nextProps.data)){
+      const {
+        ticks,
+        x_ticks,
+        preprocessed_data
+      } = this.preprocessedData(nextProps.data, nextProps.y_domain);
+      this.setState({
+        ...this.state,
+        preprocessed_data: preprocessed_data,
+        ticks: ticks,
+        x_ticks: x_ticks,
+      });
+    }
+  }
+
   render(){
     
     return (
@@ -98,7 +114,7 @@ export default class BubbleVis extends Component {
         colorType="literal"
         xDomain={[0, this.props.y_domain]}
         width={150 + (this.props.first ? 160 : 0)}
-        height={18*this.props.data.length}
+        height={15*this.props.data.length + 25}
         margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
         <HorizontalGridLines />
         <VerticalGridLines 
