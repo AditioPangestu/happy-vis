@@ -1,0 +1,111 @@
+[{
+    "country": "Norway",
+    "region": "Western Europe",
+    "happiness_rank": 1,
+    "happiness_score": "7.53700017929077",
+    "gdp": "1.61646318435669",
+    "family": "1.53352355957031",
+    "life_expectancy": "0.635422587394714",
+    "freedom": "0.635422587394714",
+    "trust": "0.315963834524155",
+    "generosity": "0.36201223731041"
+}, {
+    "country": "Denmark",
+    "region": "Western Europe",
+    "happiness_rank": 2,
+    "happiness_score": "7.52199983596802",
+    "gdp": "1.48238301277161",
+    "family": "1.55112159252167",
+    "life_expectancy": "0.626006722450256",
+    "freedom": "0.626006722450256",
+    "trust": "0.40077006816864",
+    "generosity": "0.355280488729477"
+}, {
+    "country": "Iceland",
+    "region": "Western Europe",
+    "happiness_rank": 3,
+    "happiness_score": "7.50400018692017",
+    "gdp": "1.480633020401",
+    "family": "1.6105740070343",
+    "life_expectancy": "0.627162635326385",
+    "freedom": "0.627162635326385",
+    "trust": "0.153526559472084",
+    "generosity": "0.475540220737457"
+}, {
+    "country": "Switzerland",
+    "region": "Western Europe",
+    "happiness_rank": 4,
+    "happiness_score": "7.49399995803833",
+    "gdp": "1.56497955322266",
+    "family": "1.51691174507141",
+    "life_expectancy": "0.620070576667786",
+    "freedom": "0.620070576667786",
+    "trust": "0.367007285356522",
+    "generosity": "0.290549278259277"
+}, {
+    "country": "Finland",
+    "region": "Western Europe",
+    "happiness_rank": 5,
+    "happiness_score": "7.4689998626709",
+    "gdp": "1.44357192516327",
+    "family": "1.5402467250824",
+    "life_expectancy": "0.617950856685638",
+    "freedom": "0.617950856685638",
+    "trust": "0.38261154294014",
+    "generosity": "0.24548277258873"
+}, {
+    "country": "Netherlands",
+    "region": "Western Europe",
+    "happiness_rank": 6,
+    "happiness_score": "7.3769998550415",
+    "gdp": "1.50394463539124",
+    "family": "1.42893922328949",
+    "life_expectancy": "0.585384488105774",
+    "freedom": "0.585384488105774",
+    "trust": "0.282661825418472",
+    "generosity": "0.470489829778671"
+}, {
+    "country": "Canada",
+    "region": "North America",
+    "happiness_rank": 7,
+    "happiness_score": "7.31599998474121",
+    "gdp": "1.47920441627502",
+    "family": "1.48134899139404",
+    "life_expectancy": "0.611100912094116",
+    "freedom": "0.611100912094116",
+    "trust": "0.287371516227722",
+    "generosity": "0.435539722442627"
+}, {
+    "country": "New Zealand",
+    "region": "Australia and New Zealand",
+    "happiness_rank": 8,
+    "happiness_score": "7.31400012969971",
+    "gdp": "1.40570604801178",
+    "family": "1.54819512367249",
+    "life_expectancy": "0.614062130451202",
+    "freedom": "0.614062130451202",
+    "trust": "0.382816702127457",
+    "generosity": "0.500005125999451"
+}, {
+    "country": "Sweden",
+    "region": "Western Europe",
+    "happiness_rank": 9,
+    "happiness_score": "7.28399991989136",
+    "gdp": "1.49438726902008",
+    "family": "1.47816216945648",
+    "life_expectancy": "0.612924098968506",
+    "freedom": "0.612924098968506",
+    "trust": "0.384398728609085",
+    "generosity": "0.385399252176285"
+}, {
+    "country": "Australia",
+    "region": "Australia and New Zealand",
+    "happiness_rank": 10,
+    "happiness_score": "7.28399991989136",
+    "gdp": "1.484414935112",
+    "family": "1.51004195213318",
+    "life_expectancy": "0.601607382297516",
+    "freedom": "0.601607382297516",
+    "trust": "0.301183730363846",
+    "generosity": "0.477699249982834"
+}]
