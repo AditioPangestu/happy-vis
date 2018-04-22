@@ -50,7 +50,6 @@ class Vis extends Component {
           ...this.state,
           continents: continents
         })
-        console.log("continents", response.data);
         axios.get('./src/data/processed_2015.json')
         .then((response) => {
           const { data } = response;
@@ -92,6 +91,11 @@ class Vis extends Component {
     return aggregates;
   }
 
+  onChangeDropdown(e){
+    const {value} = e.target;
+
+  }
+
   render(){
     if (!_.isEmpty(this.state.data)){
       return (
@@ -116,17 +120,17 @@ class Vis extends Component {
                       <div className="field is-narrow">
                         <div className="control">
                           <div className="select is-fullwidth is-small">
-                            <select>
-                              <option>All</option>
-                              <option>Eastern Asia</option>
-                              <option>Western Europe</option>
-                              <option>Southeastern Asia</option>
-                              <option>North America</option>
-                              <option>Sub-Saharan Africa</option>
-                              <option>Southern Asia</option>
-                              <option>Central and Eastern Europe</option>
-                              <option>Latin America and Caribbean</option>
-                              <option>Australia and New Zealand</option>
+                            <select onChange={this.onChangeDropdown}>
+                              <option value="All">All</option>
+                              <option value="Eastern Asia">Eastern Asia</option>
+                              <option value="Western Europe">Western Europe</option>
+                              <option value="Southeastern Asia">Southeastern Asia</option>
+                              <option value="North America">North America</option>
+                              <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+                              <option value="Southern Asia">Southern Asia</option>
+                              <option value="Central and Eastern Europe">Central and Eastern Europe</option>
+                              <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+                              <option value="Australia and New Zealand">Australia and New Zealand</option>
                             </select>
                           </div>
                         </div>

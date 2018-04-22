@@ -84,7 +84,6 @@ export default class BubbleVis extends Component {
       tick.value = i + 1;
       x_ticks.push(tick);
     }
-    console.log(x_ticks)
     return {
       ticks,
       x_ticks,
@@ -98,9 +97,9 @@ export default class BubbleVis extends Component {
       <XYPlot
         colorType="literal"
         xDomain={[0, this.props.y_domain]}
-        width={150 + (this.props.first ? 190 : 0)}
+        width={150 + (this.props.first ? 160 : 0)}
         height={18*this.props.data.length}
-        margin={{ bottom: 10, left: (this.props.first?200:10),top : 25 }}>
+        margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
         <HorizontalGridLines />
         <VerticalGridLines 
           tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
@@ -121,6 +120,7 @@ export default class BubbleVis extends Component {
           for (var i = 0; i < this.props.data.length; i++) {
             line_series.push(
               <LineSeries
+                key={i}
                 color={this.props.data[i].color}
                 data={[
                   {
