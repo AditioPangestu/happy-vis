@@ -37,11 +37,11 @@ class GeneralMap extends Component {
         <div>
           <ComposableMap
             projectionConfig={{
-              scale: 130,
+              scale: 145.5,
               rotation: [-11, 0, 0],
             }}
-            width={600}
-            height={330.5}
+            width={700}
+            height={385.58}
           // style={{
           //   width: "75%",
           //   height: "auto",

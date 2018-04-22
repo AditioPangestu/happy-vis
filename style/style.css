@@ -4,7 +4,11 @@
 
 .title__bar {
   font-weight: 600;
-  margin-left: 2.5rem;
+  margin-left: .5rem;
+}
+
+.title__bar.is-first {
+  margin-left: 170px;
 }
 
 @media screen and (min-width: 769px), print {

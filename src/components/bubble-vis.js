@@ -9,6 +9,7 @@ import {
   HorizontalGridLines,
   VerticalRectSeries,
   MarkSeries,
+  LineSeries,
 } from 'react-vis';
 
 export default class BubbleVis extends Component {
@@ -74,8 +75,8 @@ export default class BubbleVis extends Component {
     for(var i=0;i<data.length;i++){
       const datum = data[i];
       preprocessed_data.push({
-        x:(i+1),
-        y:datum.value,
+        x: datum.value,
+        y:(i+1),
         color: datum.color
       });
       var tick = {};
@@ -83,7 +84,6 @@ export default class BubbleVis extends Component {
       tick.value = i + 1;
       x_ticks.push(tick);
     }
-    console.log(x_ticks)
     return {
       ticks,
       x_ticks,
@@ -96,31 +96,45 @@ export default class BubbleVis extends Component {
     return (
       <XYPlot
         colorType="literal"
-        yDomain={[0, this.props.y_domain]}
-        width={522}
-        height={100 + (this.props.last ? 190 : 0)}
-        margin={{ top: 10, bottom: (this.props.last?200:10),left : 52 }}
-        stackBy="y">
-        <VerticalGridLines />
-        <HorizontalGridLines 
+        xDomain={[0, this.props.y_domain]}
+        width={150 + (this.props.first ? 160 : 0)}
+        height={18*this.props.data.length}
+        margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
+        <HorizontalGridLines />
+        <VerticalGridLines 
           tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
-        <YAxis
+        <XAxis
+          orientation="top"
           tickValues={_.map(this.state.ticks, (tick)=>{return tick.value})}/>
-        <YAxis
-          position="start"
-          left={-52}
-          title={this.props.name}
-          hideTicks
-          hideLine/>
         {(()=>{
-          if(this.props.last){
+          if(this.props.first){
             return (
-              <XAxis
-                tickLabelAngle={-90}
+              <YAxis
                 tickValues={_.map(this.state.x_ticks, (tick) => { return tick.value })}
                 tickFormat={(value) => { return this.state.x_ticks[value - 1].name }} />
             )
           }
+        })()}
+        {(() => {
+          var line_series = [];
+          for (var i = 0; i < this.props.data.length; i++) {
+            line_series.push(
+              <LineSeries
+                key={i}
+                color={this.props.data[i].color}
+                data={[
+                  {
+                    x: 0,
+                    y: (i + 1)
+                  },
+                  {
+                    y: (i + 1),
+                    x: this.props.data[i].value
+                  }
+                ]} />
+            );
+          }
+          return line_series;
         })()}
         <MarkSeries
           data={this.state.preprocessed_data}/>
