@@ -151,8 +151,6 @@ class Vis extends Component {
         map_data[j].color = color_scale(((region_data[index].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
       }
     }
-    console.log("map_data",map_data);
-    console.log("aggregates", aggregates);
     return {
       map_data,
       aggregates
