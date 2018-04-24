@@ -13,17 +13,17 @@
     {
       "name": "Southeastern Asia", 
       "coordinates": [ 125.346722, 6.643209],
-      "color": "#ff8cab"
+      "color": "#fac364"
     },
     {
       "name": "North America", 
       "coordinate": [ -105.255119, 54.525961],
-      "color": "#fac364"
+      "color": "#8cd3ff"
     },
     {
       "name": "Sub-Saharan Africa", 
       "coordinate": [ 28.299435, 6.557404],
-      "color": "#8cd3ff"
+      "color": "#ff8cab"
     },
     {
       "name": "Southern Asia", 

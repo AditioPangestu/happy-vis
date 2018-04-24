@@ -8,6 +8,8 @@ import {
   VerticalGridLines,
   HorizontalGridLines,
   VerticalRectSeries,
+  MarkSeries,
+  LineSeries,
 } from 'react-vis';
 
 export default class BubbleVis extends Component {
@@ -40,26 +42,30 @@ export default class BubbleVis extends Component {
           x: 1,
           y: 3
         }
-      ]
+      ],
+      x_ticks: []
     }
   }
 
   componentWillMount(){
     const {
       ticks,
+      x_ticks,
       preprocessed_data
-    } = this.preprocessedData(this.props.data)
+    } = this.preprocessedData(this.props.data, this.props.y_domain)
     this.setState({
       ...this.state,
       preprocessed_data: preprocessed_data,
       ticks: ticks,
-    })
+      x_ticks: x_ticks,
+    });
   }
 
-  preprocessedData(data){
+  preprocessedData(data, y_domain){
     var preprocessed_data = [];
     var ticks = [];
-    var gap = this.props.y_domain/5;
+    var x_ticks = [];
+    var gap = y_domain/4;
     for(var i=0;i<5;i++){
       var tick = {};
       tick.name = i*gap;
@@ -69,16 +75,36 @@ export default class BubbleVis extends Component {
     for(var i=0;i<data.length;i++){
       const datum = data[i];
       preprocessed_data.push({
-        x0:i,
-        x:(i+1),
-        y:datum.value,
+        x: datum.value,
+        y:(i+1),
         color: datum.color
       });
+      var tick = {};
+      tick.name = datum.name;
+      tick.value = i + 1;
+      x_ticks.push(tick);
     }
     return {
       ticks,
+      x_ticks,
       preprocessed_data
     };
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(!_.isEqual(this.props.data, nextProps.data)){
+      const {
+        ticks,
+        x_ticks,
+        preprocessed_data
+      } = this.preprocessedData(nextProps.data, nextProps.y_domain);
+      this.setState({
+        ...this.state,
+        preprocessed_data: preprocessed_data,
+        ticks: ticks,
+        x_ticks: x_ticks,
+      });
+    }
   }
 
   render(){
@@ -86,20 +112,48 @@ export default class BubbleVis extends Component {
     return (
       <XYPlot
         colorType="literal"
-        yDomain={[0, this.props.y_domain]}
-        width={230}
-        height={95}
-        margin={{ top: 10, bottom: 10 }}
-        stackBy="y">
-        <VerticalGridLines />
+        xDomain={[0, this.props.y_domain]}
+        width={150 + (this.props.first ? 160 : 0)}
+        height={15*this.props.data.length + 25}
+        margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
         <HorizontalGridLines />
-        <YAxis 
-          tickValue={_.map(this.state.ticks, (tick)=>{return tick.value})}
-          />
-
-        <VerticalRectSeries
-          data={this.state.preprocessed_data}
-        />
+        <VerticalGridLines 
+          tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
+        <XAxis
+          orientation="top"
+          tickValues={_.map(this.state.ticks, (tick)=>{return tick.value})}/>
+        {(()=>{
+          if(this.props.first){
+            return (
+              <YAxis
+                tickValues={_.map(this.state.x_ticks, (tick) => { return tick.value })}
+                tickFormat={(value) => { return this.state.x_ticks[value - 1].name }} />
+            )
+          }
+        })()}
+        {(() => {
+          var line_series = [];
+          for (var i = 0; i < this.props.data.length; i++) {
+            line_series.push(
+              <LineSeries
+                key={i}
+                color={this.props.data[i].color}
+                data={[
+                  {
+                    x: 0,
+                    y: (i + 1)
+                  },
+                  {
+                    y: (i + 1),
+                    x: this.props.data[i].value
+                  }
+                ]} />
+            );
+          }
+          return line_series;
+        })()}
+        <MarkSeries
+          data={this.state.preprocessed_data}/>
       </XYPlot>
     );
   }
