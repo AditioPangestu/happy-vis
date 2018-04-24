@@ -16,6 +16,7 @@ class Vis extends Component {
       },
       highlighted_data : {},
       regions : [],
+      map_data : [],
       viewed_region : "All",
       current_x0_window : 0,
       current_x_window : 0,
@@ -26,6 +27,7 @@ class Vis extends Component {
       is_mouse_down : false,
     };
     this.onChangeDropdown = this.onChangeDropdown.bind(this);
+    this.preproccesMapData = this.preproccesMapData.bind(this);
   }
 
   componentWillMount(){
@@ -41,7 +43,7 @@ class Vis extends Component {
             const { data } = response;
             this.setState({
               ...this.state,
-              data: {raw:data, aggregates:this.preproccesData(data, regions)}
+              data: { raw: data, aggregates: this.preproccesData(data, regions), map_data: this.preproccesMapData(data)}
             })
           });
       });
@@ -58,7 +60,7 @@ class Vis extends Component {
     var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"]
     var aggregates = [];
     for (var i = 0; i < atribut_names.length;i++){
-      var aggregate = {}
+      var aggregate = {};
       aggregate.attribute_name = atribut_names[i];
       aggregate.name = atribut_reader_names[i];
       aggregate.data = [];
@@ -77,12 +79,38 @@ class Vis extends Component {
     return aggregates;
   }
 
+  preproccesMapData(data){
+    var map_data = [];
+    const max_happy_score = parseFloat(_.maxBy(data, (datum) => {
+      return parseFloat(datum.happiness_score);
+    }).happiness_score);
+    const min_happy_score = parseFloat(_.minBy(data, (datum) => {
+      return parseFloat(datum.happiness_score);
+    }).happiness_score);
+    const color_scale = chroma.scale(['#d998cb', '#f2d249']).mode('lab');
+    for(var i=0; i<data.length;i++){
+      const datum = data[i];
+      map_data.push({
+        name : datum.country,
+        color: color_scale(((datum.happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+      })
+    }
+    return map_data;
+  }
+
   preproccesregionData(data, region) {
-    var atribut_names = ["life_expectancy", "generosity", "trust", "freedom", "family", "gdp"]
-    var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"]
+    var atribut_names = ["life_expectancy", "generosity", "trust", "freedom", "family", "gdp"];
+    var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"];
     var aggregates = [];
-    const color_scale = chroma.scale(['white', region.color]).mode('lab');    
+    var map_data = [];
+    const color_scale = chroma.scale([region.color, '#f2d249']).mode('lab');    
     const region_data = _.filter(data,(datum)=>{return (datum.region == region.name)});
+    const max_happy_score = parseFloat(_.maxBy(region_data, (datum) => {
+      return parseFloat(datum.happiness_score);
+    }).happiness_score);
+    const min_happy_score = parseFloat(_.minBy(region_data, (datum) => {
+      return parseFloat(datum.happiness_score);
+    }).happiness_score);
     for (var i = 0; i < atribut_names.length; i++) {
       var aggregate = {}
       aggregate.attribute_name = atribut_names[i];
@@ -99,29 +127,38 @@ class Vis extends Component {
         aggregates[j].data.push({
           name: datum.country,
           value: parseFloat(datum[[atribut_names[j]]]),
-          color: color_scale((region_data.length-i)/region_data.length+.5).hex()
+          color: color_scale(((datum.happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
         });
       }
+      map_data.push({
+        name: datum.country,
+        color: color_scale(((datum.happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex(),
+      });
     }
-    return aggregates;
+    return {
+      map_data,
+      aggregates
+    };
+  }
+
+  handleMapHover(country_name){
+
   }
 
   onChangeDropdown(e){
     const {value} = e.target;
-    this.setState({
-      ...this.state,
-      viewed_region : value
-    })
     if(value == "All"){
       this.setState({
         ...this.state,
-        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions) }
+        viewed_region: value,
+        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions), map_data: this.preproccesMapData(this.state.raw) }
       })
     } else {
-      console.log("cuy");
+      const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }));
       this.setState({
         ...this.state,
-        data: { raw: this.state.data.raw, aggregates: this.preproccesregionData(this.state.data.raw, _.find(this.state.regions,{name : value})) }
+        viewed_region: value,
+        data: { raw: this.state.data.raw, aggregates: aggregates, map_data:map_data }
       })
     }
   }
