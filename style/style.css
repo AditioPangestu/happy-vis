@@ -1,28 +1,22 @@
-.section {
-  padding: 1rem 0 0;
+.wsdm-tooltip {
+  display: none;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 3px;
+  pointer-events: none;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
 }
-
-.title__bar {
-  font-weight: 600;
-  margin-left: .5rem;
-}
-
-.title__bar.is-first {
-  margin-left: 170px;
-}
-
-@media screen and (min-width: 769px), print {
-  .field-label {
-    margin-right: .5rem;
-  }
-}
-
-.rv-discrete-color-legend-item {
-  padding: .2rem 0rem;
-}
-
-.rv-xy-plot__axis__title text{
-  font-weight: 600;
-  font-size: 12px;
-  color: black;
+.wsdm-tooltip:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 100%;
+  left: 50%;
+  margin-left: -0.5rem;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.5rem solid rgba(255, 255, 255, 0.95);
 }

@@ -2,53 +2,63 @@
   "data": [
     {
       "name": "Eastern Asia", 
-      "coordinate": [7.785305, 81.427898],
-      "color": "#5cbae6"
+      "coordinate": [ 81.427898, 7.785305],
+      "color": "#5cbae6",
+      "zoom": 2
     },
     {
       "name": "Western Europe", 
-      "coordinate": [55.012153, -3.446869],
-      "color": "#b6d957"
+      "coordinate": [ -3.446869, 55.012153],
+      "color": "#b6d957",
+      "zoom": 2
     },
     {
       "name": "Southeastern Asia", 
-      "coordinates": [6.643209, 125.346722],
-      "color": "#fac364"
+      "coordinate": [ 125.346722, 6.643209],
+      "color": "#fac364",
+      "zoom": 2
     },
     {
       "name": "North America", 
-      "coordinate": [54.525961, -105.255119],
-      "color": "#8cd3ff"
+      "coordinate": [ -105.255119, 54.525961],
+      "color": "#8cd3ff",
+      "zoom": 2
     },
     {
       "name": "Sub-Saharan Africa", 
-      "coordinate": [6.557404, 28.299435],
-      "color": "#ff8cab"
+      "coordinate": [ 28.299435, 6.557404],
+      "color": "#ff8cab",
+      "zoom": 2
     },
     {
       "name": "Southern Asia", 
-      "coordinate": [25.03764, 76.456309],
-      "color": "#93b9c6"
+      "coordinate": [ 76.456309, 25.03764],
+      "color": "#93b9c6",
+      "zoom": 2
     },
     {
       "name": "Central and Eastern Europe", 
-      "coordinate": [52.232679, 21.014944],
-      "color" : "#ccc5a8"
+      "coordinate": [ 21.014944, 52.232679],
+      "color": "#ccc5a8",
+      "zoom": 2
     },
     {
       "name": "Latin America and Caribbean", 
-      "coordinate": [-8.783195, -55.491477],
-      "color": "#52bacc"
+      "coordinate": [ -55.491477, -17.783195],
+      "color": "#52bacc",
+      "zoom": 2
     },
     {
       "name": "Middle East and Northern Africa", 
-      "coordinate": [31.41565, 35.0715],
-      "color": "#dbdb46"
+      "coordinate": [ 35.0715, 31.41565],
+      "color": "#dbdb46",
+      "zoom": 2
     },
     {
       "name": "Australia and New Zealand", 
-      "coordinate": [-29.532804, 145.491477],
-      "color": "#98aafb"
+      "coordinate": [ 145.491477, -29.532804],
+      "color": "#98aafb",
+      "zoom": 2
     }
   ]
 }

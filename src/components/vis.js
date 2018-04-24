@@ -41,10 +41,19 @@ class Vis extends Component {
         axios.get('./src/data/ranked_2017.json')
           .then((response) => {
             const { data } = response;
-            this.setState({
-              ...this.state,
-              data: { raw: data, aggregates: this.preproccesData(data, regions), map_data: this.preproccesMapData(data)}
-            })
+            axios.get('./src/data/country_colors.json')
+              .then((response) => {
+                var country_colors = response.data.data;
+                const aggregates = this.preproccesData(data, regions);
+                const map_data = this.preproccesMapData(data, country_colors);
+
+                this.setState({
+                  ...this.state,
+                  country_colors: country_colors,
+                  map_data: map_data,
+                  data: { raw: data, aggregates: aggregates  }
+                })
+              });
           });
       });
   }
@@ -79,8 +88,8 @@ class Vis extends Component {
     return aggregates;
   }
 
-  preproccesMapData(data){
-    var map_data = [];
+  preproccesMapData(data, country_colors){
+    var map_data = _.clone(country_colors,true);
     const max_happy_score = parseFloat(_.maxBy(data, (datum) => {
       return parseFloat(datum.happiness_score);
     }).happiness_score);
@@ -88,21 +97,23 @@ class Vis extends Component {
       return parseFloat(datum.happiness_score);
     }).happiness_score);
     const color_scale = chroma.scale(['#d998cb', '#f2d249']).mode('lab');
-    for(var i=0; i<data.length;i++){
-      const datum = data[i];
-      map_data.push({
-        name : datum.country,
-        color: color_scale(((datum.happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
-      })
+    for(var j=0;j<country_colors.length;j++){
+      const country_color = country_colors[j];
+      const index = _.findIndex(data,(datum)=>{
+        return datum.country == country_color.name;
+      });
+      if(index!=-1){
+        map_data[j].color = color_scale(((data[index].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+      }
     }
     return map_data;
   }
 
-  preproccesregionData(data, region) {
+  preproccesregionData(data, region, country_colors) {
     var atribut_names = ["life_expectancy", "generosity", "trust", "freedom", "family", "gdp"];
     var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"];
     var aggregates = [];
-    var map_data = [];
+    var map_data = _.clone(country_colors,true);
     const color_scale = chroma.scale([region.color, '#f2d249']).mode('lab');    
     const region_data = _.filter(data,(datum)=>{return (datum.region == region.name)});
     const max_happy_score = parseFloat(_.maxBy(region_data, (datum) => {
@@ -121,20 +132,27 @@ class Vis extends Component {
       })[aggregate.attribute_name]);
       aggregates.push(aggregate);
     }
-    for(var i=0; i < region_data.length;i++){
+    for (var i = 0; i < region_data.length; i++) {
       const datum = region_data[i];
       for (var j = 0; j < atribut_names.length; j++) {
         aggregates[j].data.push({
           name: datum.country,
           value: parseFloat(datum[[atribut_names[j]]]),
-          color: color_scale(((datum.happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+          color: color_scale(((region_data[i].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
         });
       }
-      map_data.push({
-        name: datum.country,
-        color: color_scale(((datum.happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex(),
-      });
     }
+    for (var j = 0; j < country_colors.length; j++) {
+      const country_color = country_colors[j];
+      const index = _.findIndex(region_data, (datum) => {
+        return datum.country == country_color.name;
+      });
+      if (index != -1) {
+        map_data[j].color = color_scale(((region_data[index].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+      }
+    }
+    console.log("map_data",map_data);
+    console.log("aggregates", aggregates);
     return {
       map_data,
       aggregates
@@ -151,10 +169,10 @@ class Vis extends Component {
       this.setState({
         ...this.state,
         viewed_region: value,
-        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions), map_data: this.preproccesMapData(this.state.raw) }
+        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions), map_data: this.preproccesMapData(this.state.data.raw,this.state.country_colors) }
       })
     } else {
-      const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }));
+      const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }), this.state.country_colors);
       this.setState({
         ...this.state,
         viewed_region: value,
@@ -173,7 +191,7 @@ class Vis extends Component {
                 style={{
                   width:"700px"
                 }}>
-                <GeneralMap />
+                <GeneralMap viewed={this.state.viewed_region} country_colors={this.state.map_data} />
                 
               </div>
               <div className="column">
