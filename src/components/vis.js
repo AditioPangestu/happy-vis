@@ -108,19 +108,21 @@ class Vis extends Component {
 
   onChangeDropdown(e){
     const {value} = e.target;
-    this.setState({
-      ...this.state,
-      viewed_region : value
-    })
-    if(this.state.viewed_region == "All"){
+    // this.setState({
+    //   ...this.state,
+      
+    // })
+    if(value == "All"){
       this.setState({
         ...this.state,
+        viewed_region: value,
         data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions) }
       })
     } else {
       console.log("cuy");
       this.setState({
         ...this.state,
+        viewed_region: value,
         data: { raw: this.state.data.raw, aggregates: this.preproccesregionData(this.state.data.raw, _.find(this.state.regions,{name : value})) }
       })
     }
@@ -137,7 +139,7 @@ class Vis extends Component {
                 style={{
                   width:"700px"
                 }}>
-                <GeneralMap viewed={this.state.viewed_region} />
+                <GeneralMap viewed={this.state.viewed_region} country_colors={this.state.map_data} />
                 
               </div>
               <div className="column">

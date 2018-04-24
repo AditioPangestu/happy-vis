@@ -111,8 +111,8 @@ class GeneralMap extends Component {
   handleContinentClick(continent) {
     this.setState({
       ...this.state,
-      zoom: 2,
-      center: continent.coordinates,
+      zoom: continent.zoom,
+      center: continent.coordinate,
     })
   }
   handleReset() {
@@ -171,10 +171,11 @@ class GeneralMap extends Component {
       //   viewed: nextProps.viewed
       // })
 
-      if (this.props.viewed == 'All') {
+      if (nextProps.viewed == 'All') {
         this.handleReset()
       } else {
-        this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == this.props.viewed)])
+        console.log(this.state.continents[this.state.continents.findIndex(obj => obj.name == nextProps.viewed)])
+        this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == nextProps.viewed)])
       }
     }
   }
@@ -182,7 +183,7 @@ class GeneralMap extends Component {
   render() {
     // if (!_.isEmpty(this.state.continents)) {
     var geographys = []
-    if (this.state.continents.length > 0 && this.state.country_colors.length > 0) {
+    if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       // if (this.state.viewed == 'All') {
       //   // this.handleReset();
       // } else { 
@@ -242,7 +243,7 @@ class GeneralMap extends Component {
                         onMouseLeave={this.handleLeave}
                         style={{
                           default: {
-                            fill: this.state.country_colors[this.state.country_colors.findIndex(obj => obj.name == geography.properties.name)].color,
+                            fill: this.props.country_colors[this.props.country_colors.findIndex(obj => obj.name == geography.properties.name)].color,
                             stroke: "#607D8B",
                             strokeWidth: 0.5,
                             outline: "none",
