@@ -113,8 +113,6 @@ class GeneralMap extends Component {
 
   componentWillMount() {
 
-    
-
     axios.get('./src/data/world-50m.json')
       .then((response) => {
         const data = response;
@@ -129,14 +127,6 @@ class GeneralMap extends Component {
               ...this.state,
               continents: continents_centroid
             })
-            axios.get('./src/data/country_colors.json')
-              .then((response) => {
-                var country_colors = response.data.data;
-                this.setState({
-                  ...this.state,
-                  country_colors: country_colors
-                })
-              })
           })
       })
   }
@@ -155,10 +145,22 @@ class GeneralMap extends Component {
         this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == nextProps.viewed)])
       }
     }
+    // console.log('notchanged')
+    if (this.props.country_colors != nextProps.country_colors) {
+      this.setState({
+        ...this.state,
+        fill_color: nextProps.country_colors
+      })
+      // console.log('changed')
+    }
   }
   
   render() {
     var geographys = []
+    // console.log(this.props.country_colors[this.props.country_colors.findIndex(obj => obj.name == "Australia")].color)
+    var fill_color = this.props.country_colors
+    console.log('asdf')
+    console.log(fill_color[fill_color.findIndex(obj => obj.name == "Australia")].color)
     if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       return (
         <div>
@@ -184,9 +186,9 @@ class GeneralMap extends Component {
               height={385.58}
             >
               <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning>
-                <Geographies geography="./src/data/world-50m.json" >
+                <Geographies geography="./src/data/world-50m.json" disableOptimization={true}>
                   {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
-                      
+
                       <Geography
                         key={i}
                         geography={geography}
@@ -195,7 +197,7 @@ class GeneralMap extends Component {
                         onMouseLeave={this.handleLeave}
                         style={{
                           default: {
-                            fill: this.props.country_colors[this.props.country_colors.findIndex(obj => obj.name == geography.properties.name)].color,
+                            fill: fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color,
                             stroke: "#607D8B",
                             strokeWidth: 0.5,
                             outline: "none",

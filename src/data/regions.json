@@ -8,9 +8,9 @@
     },
     {
       "name": "Western Europe", 
-      "coordinate": [ -3.446869, 55.012153],
+      "coordinate": [ -3.446869, 58.012153],
       "color": "#b6d957",
-      "zoom": 2
+      "zoom": 2.5
     },
     {
       "name": "Southeastern Asia", 
