@@ -44,15 +44,16 @@ class Vis extends Component {
             axios.get('./src/data/country_colors.json')
               .then((response) => {
                 var country_colors = response.data.data;
+                const temp = _.cloneDeep(country_colors);
                 const aggregates = this.preproccesData(data, regions);
                 const map_data = this.preproccesMapData(data, country_colors);
-
                 this.setState({
                   ...this.state,
-                  country_colors: country_colors,
+                  country_colors: temp,
                   map_data: map_data,
                   data: { raw: data, aggregates: aggregates  }
                 })
+                // console.log("country_colors-after", temp);
               });
           });
       });
@@ -89,7 +90,7 @@ class Vis extends Component {
   }
 
   preproccesMapData(data, country_colors){
-    var map_data = _.clone(country_colors,true);
+    var map_data = _.cloneDeep(country_colors);
     const max_happy_score = parseFloat(_.maxBy(data, (datum) => {
       return parseFloat(datum.happiness_score);
     }).happiness_score);
@@ -97,8 +98,8 @@ class Vis extends Component {
       return parseFloat(datum.happiness_score);
     }).happiness_score);
     const color_scale = chroma.scale(['#d998cb', '#f2d249']).mode('lab');
-    for(var j=0;j<country_colors.length;j++){
-      const country_color = country_colors[j];
+    for (var j = 0; j < map_data.length;j++){
+      const country_color = map_data[j];
       const index = _.findIndex(data,(datum)=>{
         return datum.country == country_color.name;
       });
@@ -113,7 +114,7 @@ class Vis extends Component {
     var atribut_names = ["life_expectancy", "generosity", "trust", "freedom", "family", "gdp"];
     var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"];
     var aggregates = [];
-    var map_data = _.clone(country_colors,true);
+    var map_data = _.cloneDeep(country_colors);
     const color_scale = chroma.scale([region.color, '#f2d249']).mode('lab');    
     const region_data = _.filter(data,(datum)=>{return (datum.region == region.name)});
     const max_happy_score = parseFloat(_.maxBy(region_data, (datum) => {
@@ -142,8 +143,8 @@ class Vis extends Component {
         });
       }
     }
-    for (var j = 0; j < country_colors.length; j++) {
-      const country_color = country_colors[j];
+    for (var j = 0; j < map_data.length; j++) {
+      const country_color = map_data[j];
       const index = _.findIndex(region_data, (datum) => {
         return datum.country == country_color.name;
       });
@@ -167,15 +168,17 @@ class Vis extends Component {
       this.setState({
         ...this.state,
         viewed_region: value,
-        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions), map_data: this.preproccesMapData(this.state.data.raw,this.state.country_colors) }
-      })
+        map_data: this.preproccesMapData(this.state.data.raw, this.state.country_colors) ,
+        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions)}
+      });
     } else {
       const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }), this.state.country_colors);
       this.setState({
         ...this.state,
         viewed_region: value,
-        data: { raw: this.state.data.raw, aggregates: aggregates, map_data:map_data }
-      })
+        map_data: map_data,
+        data: { raw: this.state.data.raw, aggregates: aggregates }
+      });
     }
   }
 
