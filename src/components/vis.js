@@ -136,7 +136,7 @@ class Vis extends Component {
                 style={{
                   width:"700px"
                 }}>
-                <GeneralMap />
+                <GeneralMap viewed={this.state.viewed_region} />
                 
               </div>
               <div className="column">

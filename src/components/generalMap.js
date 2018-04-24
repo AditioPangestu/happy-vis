@@ -45,6 +45,7 @@ class GeneralMap extends Component {
           outline: "none",
         },
       },
+      country_colors: []
       // country_styles: [
       //   {
       //     name: 
@@ -69,7 +70,7 @@ class GeneralMap extends Component {
     }
       this.tip.show(`
         <div class="tooltip-inner">
-          ${geography.properties.name == 'Russia' ? mapping[geography.properties.name] : '#fffff'}
+          ${geography.properties.name}
         </div>
       `)
       // {
@@ -81,6 +82,13 @@ class GeneralMap extends Component {
         pageX: x,
         pageY: y
       })
+
+      var defaultStyle = this.state.default_style
+      
+      this.setState({
+        ...this.state,
+
+      })
   }
   handleLeave() {
     // this.props.dispatch(hide())
@@ -90,22 +98,26 @@ class GeneralMap extends Component {
 
   handleZoomIn() {
     this.setState({
+      ...this.state,
       zoom: this.state.zoom * 2,
     })
   }
   handleZoomOut() {
     this.setState({
+      ...this.state,
       zoom: this.state.zoom / 2,
     })
   }
   handleContinentClick(continent) {
     this.setState({
+      ...this.state,
       zoom: 2,
       center: continent.coordinates,
     })
   }
   handleReset() {
     this.setState({
+      ...this.state,
       center: [0, 20],
       zoom: 1,
     })
@@ -119,14 +131,23 @@ class GeneralMap extends Component {
           ...this.state,
           world_map: data
         })
-        axios.get('./src/data/continents.json')
+        axios.get('./src/data/regions.json')
           .then((response) => {
             var continents_centroid = response.data.data;
-            console.log(continents_centroid)
+            // console.log(continents_centroid)
             this.setState({
               ...this.state,
               continents: continents_centroid
             })
+            axios.get('./src/data/country_colors.json')
+              .then((response) => {
+                var country_colors = response.data.data;
+                console.log(country_colors)
+                this.setState({
+                  ...this.state,
+                  country_colors: country_colors
+                })
+              })
           })
       })
   }
@@ -136,14 +157,31 @@ class GeneralMap extends Component {
     this.tip.create()
   }
   
+  componentWillReceiveProps(nextProps) {
+
+    if (this.state.viewed != nextProps.viewed) {
+      this.setState({
+        ...this.state,
+        viewed: nextProps.viewed
+      })
+    }
+  }
   
   render() {
     // if (!_.isEmpty(this.state.continents)) {
-    if (this.state.continents.length > 0) {
+    var geographys = []
+    if (this.state.continents.length > 0 && this.state.country_colors.length > 0) {
+      // if (this.state.viewed == 'All') {
+      //   this.handleReset();
+      // } else { 
+      //   this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == this.state.viewed)])
+      // }
       return (
         <div>
 
-          {this.state.continents.map(
+          {/* {this.state.continents.findIndex()} */}
+
+          {/* {this.state.continents.map(
             (continent, i) => (
               <button
                 key={i}
@@ -153,7 +191,7 @@ class GeneralMap extends Component {
               </button>
             )
           )}
-          <button onClick={this.handleReset}>Reset</button>
+          <button onClick={this.handleReset}>Reset</button> */}
 
           {/* <Motion
             defaultStyle={{
@@ -190,7 +228,26 @@ class GeneralMap extends Component {
                         projection={projection}
                         onMouseMove={this.handleMove}
                         onMouseLeave={this.handleLeave}
-                        style={}
+                        style={{
+                          default: {
+                            fill: this.state.country_colors[this.state.country_colors.findIndex(obj => obj.name == geography.properties.name)].color,
+                            stroke: "#607D8B",
+                            strokeWidth: 0.5,
+                            outline: "none",
+                          },
+                          hover: {
+                            fill: "#607D8B",
+                            stroke: "#607D8B",
+                            strokeWidth: 0.5,
+                            outline: "none",
+                          },
+                          pressed: {
+                            fill: "#FF5722",
+                            stroke: "#607D8B",
+                            strokeWidth: 0.5,
+                            outline: "none",
+                          }
+                        }}
                       />
                   ))}
                 </Geographies>
