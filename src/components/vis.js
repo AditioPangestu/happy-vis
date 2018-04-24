@@ -112,7 +112,7 @@ class Vis extends Component {
       ...this.state,
       viewed_region : value
     })
-    if(value == "All"){
+    if(this.state.viewed_region == "All"){
       this.setState({
         ...this.state,
         data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions) }
@@ -128,6 +128,7 @@ class Vis extends Component {
 
   render(){
     if (this.state.data.aggregates.length != 0){
+      console.log(this.state.viewed_region)
       return (
         <div>
           <section className="section">

@@ -124,6 +124,9 @@ class GeneralMap extends Component {
   }
 
   componentWillMount() {
+
+    
+
     axios.get('./src/data/world-50m.json')
       .then((response) => {
         const data = response;
@@ -159,11 +162,20 @@ class GeneralMap extends Component {
   
   componentWillReceiveProps(nextProps) {
 
-    if (this.state.viewed != nextProps.viewed) {
-      this.setState({
-        ...this.state,
-        viewed: nextProps.viewed
-      })
+    console.log('componentWillReceiveProps')
+    console.log(this.props)
+    console.log(nextProps)
+    if (this.props.viewed != nextProps.viewed) {
+      // this.setState({
+      //   ...this.state,
+      //   viewed: nextProps.viewed
+      // })
+
+      if (this.props.viewed == 'All') {
+        this.handleReset()
+      } else {
+        this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == this.props.viewed)])
+      }
     }
   }
   
@@ -172,9 +184,9 @@ class GeneralMap extends Component {
     var geographys = []
     if (this.state.continents.length > 0 && this.state.country_colors.length > 0) {
       // if (this.state.viewed == 'All') {
-      //   this.handleReset();
+      //   // this.handleReset();
       // } else { 
-      //   this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == this.state.viewed)])
+        
       // }
       return (
         <div>
@@ -193,7 +205,7 @@ class GeneralMap extends Component {
           )}
           <button onClick={this.handleReset}>Reset</button> */}
 
-          {/* <Motion
+          <Motion
             defaultStyle={{
               zoom: 1,
               x: 0,
@@ -204,8 +216,8 @@ class GeneralMap extends Component {
               x: spring(this.state.center[0], { stiffness: 210, damping: 20 }),
               y: spring(this.state.center[1], { stiffness: 210, damping: 20 }),
             }}
-          > */}
-          {/* {({zoom,x,y}) => ( */}
+          >
+          {({zoom,x,y}) => (
             <ComposableMap
               projectionConfig={{
                 scale: 147.28,
@@ -218,7 +230,7 @@ class GeneralMap extends Component {
             //   height: "auto",
             // }}
             >
-              <ZoomableGroup center={this.state.center} zoom={this.state.zoom} disablePanning>
+              <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning>
                 <Geographies geography="./src/data/world-50m.json" >
                   {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
                       
@@ -254,9 +266,8 @@ class GeneralMap extends Component {
                 {/* <Graticule /> */}
               </ZoomableGroup>
             </ComposableMap>
-            {/* <Tooltip /> */}
-            {/* )} */}
-          {/* </Motion> */}
+            )}
+          </Motion>
         </div>
       );
     } else {
