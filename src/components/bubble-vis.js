@@ -54,7 +54,7 @@ export default class BubbleVis extends Component {
       preprocessed_data
     } = this.preprocessedData(this.props.data, this.props.y_domain)
     this.setState({
-      ...this.state,
+      
       preprocessed_data: preprocessed_data,
       ticks: ticks,
       x_ticks: x_ticks,
@@ -99,7 +99,7 @@ export default class BubbleVis extends Component {
         preprocessed_data
       } = this.preprocessedData(nextProps.data, nextProps.y_domain);
       this.setState({
-        ...this.state,
+        
         preprocessed_data: preprocessed_data,
         ticks: ticks,
         x_ticks: x_ticks,

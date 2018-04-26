@@ -41,7 +41,7 @@ export default class Legend extends Component {
   componentWillMount() {
     const ticks =this.preprocessedData(this.props.data)
     this.setState({
-      ...this.state,
+      
       ticks: ticks,
     })
   }

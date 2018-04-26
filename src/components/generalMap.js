@@ -76,7 +76,7 @@ class GeneralMap extends Component {
       var defaultStyle = this.state.default_style
       
       this.setState({
-        ...this.state,
+        
 
       })
   }
@@ -86,26 +86,26 @@ class GeneralMap extends Component {
 
   handleZoomIn() {
     this.setState({
-      ...this.state,
+      
       zoom: this.state.zoom * 2,
     })
   }
   handleZoomOut() {
     this.setState({
-      ...this.state,
+      
       zoom: this.state.zoom / 2,
     })
   }
   handleContinentClick(continent) {
     this.setState({
-      ...this.state,
+      
       zoom: continent.zoom,
       center: continent.coordinate,
     })
   }
   handleReset() {
     this.setState({
-      ...this.state,
+      
       center: [0, 20],
       zoom: 1,
     })
@@ -117,14 +117,14 @@ class GeneralMap extends Component {
       .then((response) => {
         const data = response;
         this.setState({
-          ...this.state,
+          
           world_map: data
         })
         axios.get('./src/data/regions.json')
           .then((response) => {
             var continents_centroid = response.data.data;
             this.setState({
-              ...this.state,
+              
               continents: continents_centroid
             })
           })
@@ -148,7 +148,7 @@ class GeneralMap extends Component {
     // console.log('notchanged')
     if (this.props.country_colors != nextProps.country_colors) {
       this.setState({
-        ...this.state,
+        
         fill_color: nextProps.country_colors
       })
       // console.log('changed')

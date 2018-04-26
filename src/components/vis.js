@@ -35,7 +35,7 @@ class Vis extends Component {
       .then((response) => {
         const regions = response.data.data;
         this.setState({
-          ...this.state,
+          
           regions: regions
         })
         axios.get('./src/data/ranked_2017.json')
@@ -48,7 +48,7 @@ class Vis extends Component {
                 const aggregates = this.preproccesData(data, regions);
                 const map_data = this.preproccesMapData(data, country_colors);
                 this.setState({
-                  ...this.state,
+                  
                   country_colors: temp,
                   map_data: map_data,
                   data: { raw: data, aggregates: aggregates  }
@@ -166,7 +166,7 @@ class Vis extends Component {
     const {value} = e.target;
     if(value == "All"){
       this.setState({
-        ...this.state,
+        
         viewed_region: value,
         map_data: this.preproccesMapData(this.state.data.raw, this.state.country_colors) ,
         data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions)}
@@ -174,7 +174,7 @@ class Vis extends Component {
     } else {
       const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }), this.state.country_colors);
       this.setState({
-        ...this.state,
+        
         viewed_region: value,
         map_data: map_data,
         data: { raw: this.state.data.raw, aggregates: aggregates }
