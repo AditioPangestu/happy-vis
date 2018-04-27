@@ -57,11 +57,16 @@ class GeneralMap extends Component {
     this.handleMove = this.handleMove.bind(this)
     this.handleLeave = this.handleLeave.bind(this)
     this.onViewLoaded = this.onViewLoaded.bind(this)
+    this.viewGeographyLatLong = this.viewGeographyLatLong.bind(this)
+  }
+
+  viewGeographyLatLong(geography, evt) {
+    console.log(evt.clientX + ', ' + evt.clientY)
   }
 
   onViewLoaded() {
-    const x = 400;
-    const y = 400;
+    const x = 501;
+    const y = 456;
 
     this.tip.show(`
       <div class="tooltip-inner">
@@ -76,7 +81,8 @@ class GeneralMap extends Component {
 
   handleMove(geography, evt) {
     const x = evt.clientX
-    const y = evt.clientY + window.pageYOffset
+    // const y = evt.clientY + window.pageYOffset
+    const y = evt.clientY 
     const index = _.findIndex(this.props.raw, (datum)=>{
       return datum.country == geography.properties.name
     });
@@ -93,6 +99,15 @@ class GeneralMap extends Component {
       })
       this.props.handleHover(datum);
     } else {
+      this.tip.show(`
+        <div class="tooltip-inner">
+          ${geography.properties.name}
+        </div>
+      `)
+      this.tip.position({
+        pageX: x,
+        pageY: y
+      })
       this.props.handleHover({});
     }
     var defaultStyle = this.state.default_style
@@ -169,13 +184,22 @@ class GeneralMap extends Component {
       if (nextProps.viewed == 'All') {
         this.handleReset()
       } else {
+        // this.handleReset()
         this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == nextProps.viewed)])
       }
     }
     if (this.props.country_colors != nextProps.country_colors) {
       this.setState({
+        disableOptimization: true,
         fill_color: nextProps.country_colors
+      }, () => {
+        this.setState({
+          disableOptimization: false
+        })
       })
+      // this.setState({
+      //   fill_color: nextProps.country_colors
+      // })
     }
   }
   
@@ -220,23 +244,24 @@ class GeneralMap extends Component {
                         projection={projection}
                         onMouseMove={this.handleMove}
                         onMouseLeave={this.handleLeave}
+                        onClick={this.viewGeographyLatLong}
                         style={{
                           default: {
                             fill: fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color,
                             stroke: "#607D8B",
-                            strokeWidth: 0.5,
+                            strokeWidth: 0.3,
                             outline: "none",
                           },
                           hover: {
                             fill: (fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color == "#ffffff" ? "#ffffff":"#607D8B"),
                             stroke: "#607D8B",
-                            strokeWidth: 0.5,
+                            strokeWidth: 0.3,
                             outline: "none",
                           },
                           pressed: {
                             fill: "#ffffff",
                             stroke: "#607D8B",
-                            strokeWidth: 0.5,
+                            strokeWidth: 0.3,
                             outline: "none",
                           }
                         }}
