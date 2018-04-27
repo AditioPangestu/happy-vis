@@ -225,6 +225,7 @@ class Vis extends Component {
                               <option value="Southern Asia">Southern Asia</option>
                               <option value="Central and Eastern Europe">Central and Eastern Europe</option>
                               <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+                              <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
                               <option value="Australia and New Zealand">Australia and New Zealand</option>
                             </select>
                           </div>
@@ -243,6 +244,7 @@ class Vis extends Component {
                     <div className="column" key={i}>
                       <p className={"is-size-7 title__bar "+((i==0)?"is-first":"")}>{this.state.data.aggregates[i].name} Score</p>
                       <BubbleVis
+                        viewed_region={this.state.viewed_region}
                         first={i == 0}
                         highlighted_data={
                           (()=>{

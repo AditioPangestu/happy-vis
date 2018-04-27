@@ -209,13 +209,13 @@ class GeneralMap extends Component {
                             outline: "none",
                           },
                           hover: {
-                            fill: "#607D8B",
+                            fill: (fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color == "#ffffff" ? "#ffffff":"#607D8B"),
                             stroke: "#607D8B",
                             strokeWidth: 0.5,
                             outline: "none",
                           },
                           pressed: {
-                            fill: "#FF5722",
+                            fill: "#ffffff",
                             stroke: "#607D8B",
                             strokeWidth: 0.5,
                             outline: "none",

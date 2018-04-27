@@ -91,6 +91,49 @@ export default class BubbleVis extends Component {
     };
   }
 
+  preprocessedHighlightData(data, y_domain,highlighted_data){
+    var preprocessed_data = [];
+    var ticks = [];
+    var x_ticks = [];
+    var gap = y_domain/4;
+    for(var i=0;i<5;i++){
+      var tick = {};
+      tick.name = i*gap;
+      tick.value = i*gap;
+      ticks.push(tick);
+    }
+    for(var i=0;i<data.length;i++){
+      const datum = data[i];
+      preprocessed_data.push({
+        x: datum.value,
+        y:(i+1),
+        color: (()=>{
+          if (!_.isEmpty(this.props.highlighted_data)) {
+            if (this.props.viewed_region == "All") {
+              if (this.props.highlighted_data.region_name == datum.name) {
+                console.log("cuka", this.props.highlighted_data);
+                return datum.color;
+              } else {
+                return "#afafaf";
+              }
+            }
+          } else {
+            return datum.color;
+          }
+        })()
+      });
+      var tick = {};
+      tick.name = datum.name;
+      tick.value = i + 1;
+      x_ticks.push(tick);
+    }
+    return {
+      ticks,
+      x_ticks,
+      preprocessed_data
+    };
+  }
+
   componentWillReceiveProps(nextProps){
     if(!_.isEqual(this.props.data, nextProps.data)){
       const {
@@ -104,6 +147,21 @@ export default class BubbleVis extends Component {
         ticks: ticks,
         x_ticks: x_ticks,
       });
+    }
+    if (!_.isEqual(this.props.highlighted_data, nextProps.highlighted_data)) {
+      if (!_.isEmpty(nextProps.highlighted_data)){
+        const {
+          ticks,
+          x_ticks,
+          preprocessed_data
+        } = this.preprocessedHighlightData(nextProps.data, nextProps.y_domain, nextProps.highlighted_data);
+        this.setState({
+
+          preprocessed_data: preprocessed_data,
+          ticks: ticks,
+          x_ticks: x_ticks,
+        });
+      }
     }
   }
 
@@ -140,10 +198,12 @@ export default class BubbleVis extends Component {
                 color={
                   (()=>{
                     if(!_.isEmpty(this.props.highlighted_data)){
-                      if (this.props.highlighted_data.region_name == this.props.data[i].name){
-                        return this.props.data[i].color;
-                      } else {
-                        return "#e0e0e0";
+                      if (this.props.viewed_region=="All"){
+                        if (this.props.highlighted_data.region_name == this.props.data[i].name){
+                          return this.props.data[i].color;
+                        } else {
+                          return "#afafaf";
+                        }
                       }
                     } else {
                       return this.props.data[i].color;
