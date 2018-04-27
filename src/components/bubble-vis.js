@@ -137,7 +137,19 @@ export default class BubbleVis extends Component {
             line_series.push(
               <LineSeries
                 key={i}
-                color={(this.props.highlighted_data.region_name == this.props.data[i].name) ? this.props.data[i].color : "#e0e0e0"}
+                color={
+                  (()=>{
+                    if(!_.isEmpty(this.props.highlighted_data)){
+                      if (this.props.highlighted_data.region_name == this.props.data[i].name){
+                        return this.props.data[i].color;
+                      } else {
+                        return "#e0e0e0";
+                      }
+                    } else {
+                      return this.props.data[i].color;
+                    }
+                  })()
+                }
                 data={[
                   {
                     x: 0,

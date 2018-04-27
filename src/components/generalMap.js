@@ -61,20 +61,29 @@ class GeneralMap extends Component {
   handleMove(geography, evt) {
     const x = evt.clientX
     const y = evt.clientY + window.pageYOffset
-    this.tip.show(`
-      <div class="tooltip-inner">
-        ${geography.properties.name}
-      </div>
-    `)
-    this.tip.position({
-      pageX: x,
-      pageY: y
-    })
+    const index = _.findIndex(this.props.raw, (datum)=>{
+      return datum.country == geography.properties.name
+    });
+    if(index!=-1){
+      const datum = this.props.raw[index];
+      this.tip.show(`
+        <div class="tooltip-inner">
+          ${geography.properties.name}
+        </div>
+      `)
+      this.tip.position({
+        pageX: x,
+        pageY: y
+      })
+      this.props.handleHover(datum);
+    } else {
+      this.props.handleHover({});
+    }
     var defaultStyle = this.state.default_style
-    this.props.handleHover(geography.properties.name);
   }
   handleLeave() {
     this.tip.hide();
+    this.props.handleHover("");
   }
 
   handleZoomIn() {
@@ -100,6 +109,7 @@ class GeneralMap extends Component {
       })
     })
   }
+
   handleReset() {
     this.setState({
       disableOptimization: true,

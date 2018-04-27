@@ -160,9 +160,9 @@ class Vis extends Component {
     };
   }
 
-  handleHover(country_name){
+  handleHover(highlighted_data){
     this.setState({
-      country_name: country_name
+      highlighted_data: highlighted_data
     })
   }
 
@@ -186,23 +186,6 @@ class Vis extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.country_name != this.props.country_name) {
-      const index = _.findIndex(this.props.data.raw, (datum)=>{
-        return (datum.country == nextProps.country_name);
-      });
-      if(index != -1){
-        this.setState({
-          highlighted_data : this.props.data.raw[index]
-        })
-      } else {
-        this.setState({
-          highlighted_data: {}
-        })
-      }
-    }
-  }
-
   render(){
     if (this.state.data.aggregates.length != 0){
       return (
@@ -213,7 +196,8 @@ class Vis extends Component {
                 style={{
                   width:"700px"
                 }}>
-                <GeneralMap 
+                <GeneralMap
+                  raw={this.state.data.raw}
                   viewed={this.state.viewed_region}
                   country_colors={this.state.map_data}
                   handleHover={this.handleHover}
@@ -262,17 +246,21 @@ class Vis extends Component {
                         first={i == 0}
                         highlighted_data={
                           (()=>{
-                            if(this.state.viewed_region == "All"){
-                              return {
-                                country_name: this.state.highlighted_data.country,
-                                region_name: this.state.highlighted_data.region,
-                                value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                            if (!_.isEmpty(this.state.highlighted_data)){
+                              if(this.state.viewed_region == "All"){
+                                return {
+                                  country_name: this.state.highlighted_data.country,
+                                  region_name: this.state.highlighted_data.region,
+                                  value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                                }
+                              } else {
+                                return {
+                                  country_name: this.state.highlighted_data.country,
+                                  value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                                }
                               }
                             } else {
-                              return {
-                                country_name: this.state.highlighted_data.country,
-                                value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
-                              }
+                              return {}
                             }
                           })()
                         }
