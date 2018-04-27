@@ -883,7 +883,7 @@
     "trust": "0.07521",
     "generosity": "0.37744"
 }, {
-    "country": "Hong Kong S.A.R., China",
+    "country": "Hong Kong",
     "long": "22.25",
     "lat": "114.17",
     "region": "Eastern Asia",
@@ -1286,7 +1286,7 @@
     "trust": "0.06358",
     "generosity": "0.06431"
 }, {
-    "country": "Palestinian Territories",
+    "country": "Palestine",
     "long": "31.95",
     "lat": "35.2",
     "region": "Middle East and Northern Africa",
@@ -1442,7 +1442,7 @@
     "trust": "0.17175",
     "generosity": "0.46187"
 }, {
-    "country": "Congo (Kinshasa)",
+    "country": "Democratic Republic of the Congo",
     "long": "4",
     "lat": "21.7",
     "region": "Sub-Saharan Africa",
@@ -1676,7 +1676,7 @@
     "trust": "0.12352",
     "generosity": "0.18798"
 }, {
-    "country": "Congo (Brazzaville)",
+    "country": "Republic of the Congo",
     "long": "0.22",
     "lat": "15.82",
     "region": "Sub-Saharan Africa",
