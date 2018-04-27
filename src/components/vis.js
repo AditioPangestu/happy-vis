@@ -119,7 +119,7 @@ class Vis extends Component {
     var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"];
     var aggregates = [];
     var map_data = _.cloneDeep(country_colors);
-    const color_scale = chroma.scale([region.color, '#f2d249']).mode('lab');    
+    const color_scale = chroma.scale(['#01abce', '#ffca08']).mode('lab');    
     const region_data = _.filter(data,(datum)=>{return (datum.region == region.name)});
     const max_happy_score = parseFloat(_.maxBy(region_data, (datum) => {
       return parseFloat(datum.happiness_score);
