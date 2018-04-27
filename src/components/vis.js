@@ -14,7 +14,6 @@ class Vis extends Component {
         raw: [],
         aggregates: []
       },
-      highlighted_data : {},
       regions : [],
       map_data : [],
       viewed_region : "All",
@@ -26,7 +25,7 @@ class Vis extends Component {
       prev_absis : 0,
       is_mouse_down : false,
       country_name : "",
-      handle_data : {}
+      highlighted_data : {}
     };
     this.onChangeDropdown = this.onChangeDropdown.bind(this);
     this.preproccesMapData = this.preproccesMapData.bind(this);
@@ -187,6 +186,23 @@ class Vis extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.country_name != this.props.country_name) {
+      const index = _.findIndex(this.props.data.raw, (datum)=>{
+        return (datum.country == nextProps.country_name);
+      });
+      if(index != -1){
+        this.setState({
+          highlighted_data : this.props.data.raw[index]
+        })
+      } else {
+        this.setState({
+          highlighted_data: {}
+        })
+      }
+    }
+  }
+
   render(){
     if (this.state.data.aggregates.length != 0){
       return (
@@ -244,6 +260,22 @@ class Vis extends Component {
                       <p className={"is-size-7 title__bar "+((i==0)?"is-first":"")}>{this.state.data.aggregates[i].name} Score</p>
                       <BubbleVis
                         first={i == 0}
+                        highlighted_data={
+                          (()=>{
+                            if(this.state.viewed_region == "All"){
+                              return {
+                                country_name: this.state.highlighted_data.country,
+                                region_name: this.state.highlighted_data.region,
+                                value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                              }
+                            } else {
+                              return {
+                                country_name: this.state.highlighted_data.country,
+                                value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                              }
+                            }
+                          })()
+                        }
                         name={this.state.data.aggregates[i].name}
                         width={this.state.width}
                         height={400}
