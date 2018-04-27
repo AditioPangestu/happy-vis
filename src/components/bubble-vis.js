@@ -10,6 +10,7 @@ import {
   VerticalRectSeries,
   MarkSeries,
   LineSeries,
+  Hint
 } from 'react-vis';
 
 export default class BubbleVis extends Component {
@@ -163,7 +164,20 @@ export default class BubbleVis extends Component {
   }
 
   render(){
-    
+    const { AUTO, BOTTOM } = Hint.ALIGN;
+    var viewed_highlight_data = {};
+    if (this.props.viewed_region == "All") {
+      if (!_.isEmpty(this.props.highlighted_data)) {
+        const index = _.findIndex(this.props.data, (datum) => {
+          return (datum.name == this.props.highlighted_data.region_name)
+        });
+        if (index != -1) {
+          viewed_highlight_data.y = index + 1;
+          viewed_highlight_data.x = parseFloat(this.props.highlighted_data.value);
+          viewed_highlight_data.name = this.props.highlighted_data.country_name
+        }
+      }
+    }
     return (
       <XYPlot
         colorType="literal"
@@ -224,22 +238,34 @@ export default class BubbleVis extends Component {
         <MarkSeries
           data={this.state.preprocessed_data} />
         {(()=>{
-          if (this.props.viewed_region == "All") {
-            if(!_.isEmpty(this.props.highlighted_data)){
-              const index = _.findIndex(this.props.data, (datum)=>{
-                return (datum.name == this.props.highlighted_data.region_name)
-              });
-              if(index!=-1){
-                return (
-                  <MarkSeries
-                    data={[{
-                      y: (index+1),
-                      x: parseFloat(this.props.highlighted_data.value),
-                      color: "black"
-                  }]}/>
-                )
-              }
-            }
+          if ((this.props.viewed_region == "All") && (!_.isEmpty(viewed_highlight_data))) {
+            return (
+              <MarkSeries
+                data={[{
+                  y: viewed_highlight_data.y,
+                  x: viewed_highlight_data.x,
+                  color: "black"
+              }]}/>
+            )
+          }
+        })()}
+        {(()=>{
+          if ((this.props.viewed_region == "All") && (!_.isEmpty(viewed_highlight_data))) {
+            return (
+              <Hint 
+                align={{
+                  horizontal: AUTO,
+                  vertical: BOTTOM
+                }}
+                value={{
+                  y: viewed_highlight_data.y-.5,
+                  x: viewed_highlight_data.x,
+                }}>
+                <div className="tag is-dark">
+                  <p className="is-size-7">{viewed_highlight_data.name}</p>
+                </div>
+              </Hint>
+            )
           }
         })()}
       </XYPlot>
