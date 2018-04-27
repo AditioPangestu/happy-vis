@@ -50,9 +50,9 @@
     },
     {
       "name": "Middle East and Northern Africa", 
-      "coordinate": [ 35.0715, 31.41565],
+      "coordinate": [ 22.0715, 28.41565],
       "color": "#dbdb46",
-      "zoom": 2
+      "zoom": 4.4
     },
     {
       "name": "Australia and New Zealand", 
