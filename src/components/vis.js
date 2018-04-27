@@ -14,7 +14,6 @@ class Vis extends Component {
         raw: [],
         aggregates: []
       },
-      highlighted_data : {},
       regions : [],
       map_data : [],
       viewed_region : "All",
@@ -26,7 +25,7 @@ class Vis extends Component {
       prev_absis : 0,
       is_mouse_down : false,
       country_name : "",
-      handle_data : {}
+      highlighted_data : {}
     };
     this.onChangeDropdown = this.onChangeDropdown.bind(this);
     this.preproccesMapData = this.preproccesMapData.bind(this);
@@ -161,9 +160,9 @@ class Vis extends Component {
     };
   }
 
-  handleHover(country_name){
+  handleHover(highlighted_data){
     this.setState({
-      country_name: country_name
+      highlighted_data: highlighted_data
     })
   }
 
@@ -197,7 +196,8 @@ class Vis extends Component {
                 style={{
                   width:"700px"
                 }}>
-                <GeneralMap 
+                <GeneralMap
+                  raw={this.state.data.raw}
                   viewed={this.state.viewed_region}
                   country_colors={this.state.map_data}
                   handleHover={this.handleHover}
@@ -225,6 +225,7 @@ class Vis extends Component {
                               <option value="Southern Asia">Southern Asia</option>
                               <option value="Central and Eastern Europe">Central and Eastern Europe</option>
                               <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+                              <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
                               <option value="Australia and New Zealand">Australia and New Zealand</option>
                             </select>
                           </div>
@@ -243,7 +244,28 @@ class Vis extends Component {
                     <div className="column" key={i}>
                       <p className={"is-size-7 title__bar "+((i==0)?"is-first":"")}>{this.state.data.aggregates[i].name} Score</p>
                       <BubbleVis
+                        viewed_region={this.state.viewed_region}
                         first={i == 0}
+                        highlighted_data={
+                          (()=>{
+                            if (!_.isEmpty(this.state.highlighted_data)){
+                              if(this.state.viewed_region == "All"){
+                                return {
+                                  country_name: this.state.highlighted_data.country,
+                                  region_name: this.state.highlighted_data.region,
+                                  value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                                }
+                              } else {
+                                return {
+                                  country_name: this.state.highlighted_data.country,
+                                  value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                                }
+                              }
+                            } else {
+                              return {}
+                            }
+                          })()
+                        }
                         name={this.state.data.aggregates[i].name}
                         width={this.state.width}
                         height={400}

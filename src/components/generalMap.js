@@ -77,20 +77,29 @@ class GeneralMap extends Component {
   handleMove(geography, evt) {
     const x = evt.clientX
     const y = evt.clientY + window.pageYOffset
-    this.tip.show(`
-      <div class="tooltip-inner">
-        ${geography.properties.name}
-      </div>
-    `)
-    this.tip.position({
-      pageX: x,
-      pageY: y
-    })
+    const index = _.findIndex(this.props.raw, (datum)=>{
+      return datum.country == geography.properties.name
+    });
+    if(index!=-1){
+      const datum = this.props.raw[index];
+      this.tip.show(`
+        <div class="tooltip-inner">
+          ${geography.properties.name}
+        </div>
+      `)
+      this.tip.position({
+        pageX: x,
+        pageY: y
+      })
+      this.props.handleHover(datum);
+    } else {
+      this.props.handleHover({});
+    }
     var defaultStyle = this.state.default_style
-    this.props.handleHover(geography.properties.name);
   }
   handleLeave() {
     this.tip.hide();
+    this.props.handleHover("");
   }
 
   handleZoomIn() {
@@ -116,6 +125,7 @@ class GeneralMap extends Component {
       })
     })
   }
+
   handleReset() {
     this.setState({
       disableOptimization: true,
@@ -218,13 +228,13 @@ class GeneralMap extends Component {
                             outline: "none",
                           },
                           hover: {
-                            fill: "#607D8B",
+                            fill: (fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color == "#ffffff" ? "#ffffff":"#607D8B"),
                             stroke: "#607D8B",
                             strokeWidth: 0.5,
                             outline: "none",
                           },
                           pressed: {
-                            fill: "#FF5722",
+                            fill: "#ffffff",
                             stroke: "#607D8B",
                             strokeWidth: 0.5,
                             outline: "none",
