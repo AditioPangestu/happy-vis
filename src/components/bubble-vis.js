@@ -10,6 +10,7 @@ import {
   VerticalRectSeries,
   MarkSeries,
   LineSeries,
+  Hint
 } from 'react-vis';
 
 export default class BubbleVis extends Component {
@@ -108,13 +109,18 @@ export default class BubbleVis extends Component {
         x: datum.value,
         y:(i+1),
         color: (()=>{
-          if (!_.isEmpty(this.props.highlighted_data)) {
+          if (!_.isEmpty(highlighted_data)) {
             if (this.props.viewed_region == "All") {
-              if (this.props.highlighted_data.region_name == datum.name) {
-                console.log("cuka", this.props.highlighted_data);
+              if (highlighted_data.region_name == datum.name) {
                 return datum.color;
               } else {
-                return "#afafaf";
+                return "#dedede";
+              }
+            } else {
+              if (highlighted_data.country_name == this.props.data[i].name) {
+                return datum.color;
+              } else {
+                return "#dedede";
               }
             }
           } else {
@@ -149,24 +155,35 @@ export default class BubbleVis extends Component {
       });
     }
     if (!_.isEqual(this.props.highlighted_data, nextProps.highlighted_data)) {
-      if (!_.isEmpty(nextProps.highlighted_data)){
-        const {
-          ticks,
-          x_ticks,
-          preprocessed_data
-        } = this.preprocessedHighlightData(nextProps.data, nextProps.y_domain, nextProps.highlighted_data);
-        this.setState({
+      const {
+        ticks,
+        x_ticks,
+        preprocessed_data
+      } = this.preprocessedHighlightData(nextProps.data, nextProps.y_domain, nextProps.highlighted_data);
+      this.setState({
 
-          preprocessed_data: preprocessed_data,
-          ticks: ticks,
-          x_ticks: x_ticks,
-        });
-      }
+        preprocessed_data: preprocessed_data,
+        ticks: ticks,
+        x_ticks: x_ticks,
+      });
     }
   }
 
   render(){
-    
+    const { AUTO, BOTTOM } = Hint.ALIGN;
+    var viewed_highlight_data = {};
+    if (this.props.viewed_region == "All") {
+      if (!_.isEmpty(this.props.highlighted_data)) {
+        const index = _.findIndex(this.props.data, (datum) => {
+          return (datum.name == this.props.highlighted_data.region_name)
+        });
+        if (index != -1) {
+          viewed_highlight_data.y = index + 1;
+          viewed_highlight_data.x = parseFloat(this.props.highlighted_data.value);
+          viewed_highlight_data.name = this.props.highlighted_data.country_name
+        }
+      }
+    }
     return (
       <XYPlot
         colorType="literal"
@@ -202,8 +219,14 @@ export default class BubbleVis extends Component {
                         if (this.props.highlighted_data.region_name == this.props.data[i].name){
                           return this.props.data[i].color;
                         } else {
-                          return "#afafaf";
+                          return "#dedede";
                         }
+                      } else {
+                          if (this.props.highlighted_data.country_name == this.props.data[i].name){
+                            return this.props.data[i].color;
+                          } else {
+                            return "#dedede";
+                          }
                       }
                     } else {
                       return this.props.data[i].color;
@@ -225,7 +248,38 @@ export default class BubbleVis extends Component {
           return line_series;
         })()}
         <MarkSeries
-          data={this.state.preprocessed_data}/>
+          data={this.state.preprocessed_data} />
+        {(()=>{
+          if ((this.props.viewed_region == "All") && (!_.isEmpty(viewed_highlight_data))) {
+            return (
+              <MarkSeries
+                data={[{
+                  y: viewed_highlight_data.y,
+                  x: viewed_highlight_data.x,
+                  color: "black"
+              }]}/>
+            )
+          }
+        })()}
+        {(()=>{
+          if ((this.props.viewed_region == "All") && (!_.isEmpty(viewed_highlight_data))) {
+            return (
+              <Hint 
+                align={{
+                  horizontal: AUTO,
+                  vertical: BOTTOM
+                }}
+                value={{
+                  y: viewed_highlight_data.y-.5,
+                  x: viewed_highlight_data.x,
+                }}>
+                <div className="tag is-dark">
+                  <p className="is-size-7">{viewed_highlight_data.name}</p>
+                </div>
+              </Hint>
+            )
+          }
+        })()}
       </XYPlot>
     );
   }

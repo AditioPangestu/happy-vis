@@ -86,7 +86,7 @@ class GeneralMap extends Component {
     const index = _.findIndex(this.props.raw, (datum)=>{
       return datum.country == geography.properties.name
     });
-    if(index!=-1){
+    if ((index != -1) && ((this.props.raw[index].region == this.props.viewed) || (this.props.viewed=="All"))){
       const datum = this.props.raw[index];
       this.tip.show(`
         <div class="tooltip-inner">
