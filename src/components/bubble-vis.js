@@ -116,6 +116,12 @@ export default class BubbleVis extends Component {
               } else {
                 return "#dedede";
               }
+            } else {
+              if (highlighted_data.country_name == this.props.data[i].name) {
+                return datum.color;
+              } else {
+                return "#dedede";
+              }
             }
           } else {
             return datum.color;
@@ -215,6 +221,12 @@ export default class BubbleVis extends Component {
                         } else {
                           return "#dedede";
                         }
+                      } else {
+                          if (this.props.highlighted_data.country_name == this.props.data[i].name){
+                            return this.props.data[i].color;
+                          } else {
+                            return "#dedede";
+                          }
                       }
                     } else {
                       return this.props.data[i].color;
