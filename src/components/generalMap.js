@@ -45,7 +45,8 @@ class GeneralMap extends Component {
           outline: "none",
         },
       },
-      country_colors: []
+      country_colors: [],
+      disableOptimization: false
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this)
@@ -90,16 +91,24 @@ class GeneralMap extends Component {
   }
   handleContinentClick(continent) {
     this.setState({
-      
+      disableOptimization: true,
       zoom: continent.zoom,
       center: continent.coordinate,
+    }, () => {
+      this.setState({
+        disableOptimization: false,
+      })
     })
   }
   handleReset() {
     this.setState({
-      
+      disableOptimization: true,
       center: [0, 20],
       zoom: 1,
+    }, () => {
+      this.setState({
+        disableOptimization: false
+      })
     })
   }
 
@@ -173,7 +182,7 @@ class GeneralMap extends Component {
               height={385.58}
             >
               <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning>
-                <Geographies geography="./src/data/world-50m.json" disableOptimization={true}>
+                <Geographies geography="./src/data/world-50m.json" disableOptimization={this.state.disableOptimization}>
                   {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
 
                       <Geography
