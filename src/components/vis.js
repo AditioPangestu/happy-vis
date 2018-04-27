@@ -6,6 +6,8 @@ import GeneralMap from "./generalMap";
 import BubbleVis from "./bubble-vis";
 import Legends from "./legend";
 
+
+
 class Vis extends Component {
   constructor(props){
     super(props);
@@ -99,7 +101,7 @@ class Vis extends Component {
     const min_happy_score = parseFloat(_.minBy(data, (datum) => {
       return parseFloat(datum.happiness_score);
     }).happiness_score);
-    const color_scale = chroma.scale(['#d998cb', '#f2d249']).mode('lab');
+    const color_scale = chroma.scale(['#01abce', '#ffca08']).mode('lab');
     for (var j = 0; j < map_data.length;j++){
       const country_color = map_data[j];
       const index = _.findIndex(data,(datum)=>{

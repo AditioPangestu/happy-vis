@@ -20,3 +20,11 @@
   border-right: 0.5rem solid transparent;
   border-top: 0.5rem solid rgba(255, 255, 255, 0.95);
 }
+
+.field-label {
+  margin-right: .1rem;
+}
+
+.field:not(:last-child) {
+  margin-bottom: -.8rem;
+}

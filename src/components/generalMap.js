@@ -9,7 +9,17 @@ import {
   Geography,
   Markers,
   Marker
-} from "react-simple-maps"
+} from "react-simple-maps";
+
+import {
+  XYPlot,
+  XAxis,
+  YAxis,
+  VerticalGridLines,
+  HorizontalGridLines,
+  VerticalBarSeries,
+  Hint
+} from 'react-vis';
 
 import { Motion, spring } from "react-motion"
 
@@ -83,8 +93,86 @@ class GeneralMap extends Component {
     if ((index != -1) && ((this.props.raw[index].region == this.props.viewed) || (this.props.viewed=="All"))){
       const datum = this.props.raw[index];
       this.tip.show(`
-        <div class="tooltip-inner">
-          ${geography.properties.name}
+        <div>
+          <p class="is-size-6"><b>${datum.country+" "}</b><span class="is-size-7">${parseFloat(datum.happiness_score).toFixed(2)}</span></p>
+          <div class="columns is-mobile is-gapless">
+            <div class="column">
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Life Expectancy</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.life_expectancy).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Generosity</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.generosity).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Trust</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.trust).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="column">
+              <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Freedom</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.freedom).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Family</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.family).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">GDP</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.gdp).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
         </div>
       `)
       this.tip.position({
