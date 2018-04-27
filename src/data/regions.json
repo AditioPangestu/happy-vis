@@ -2,51 +2,51 @@
   "data": [
     {
       "name": "Eastern Asia", 
-      "coordinate": [ 81.427898, 7.785305],
+      "coordinate": [ 100.427898, 35.785305],
       "color": "#5cbae6",
-      "zoom": 2
+      "zoom": 4
     },
     {
       "name": "Western Europe", 
-      "coordinate": [ -3.446869, 58.012153],
+      "coordinate": [ -3.446869, 61.012153],
       "color": "#b6d957",
-      "zoom": 2.5
+      "zoom": 2.9
     },
     {
       "name": "Southeastern Asia", 
-      "coordinate": [ 125.346722, 6.643209],
+      "coordinate": [ 125.346722, 8.943209],
       "color": "#fac364",
-      "zoom": 2
+      "zoom": 4.3
     },
     {
       "name": "North America", 
-      "coordinate": [ -105.255119, 54.525961],
+      "coordinate": [ -105.255119, 58.525961],
       "color": "#8cd3ff",
-      "zoom": 2
+      "zoom": 2.2
     },
     {
       "name": "Sub-Saharan Africa", 
-      "coordinate": [ 28.299435, 6.557404],
+      "coordinate": [ 10.299435, -3.557404],
       "color": "#ff8cab",
-      "zoom": 2
+      "zoom": 2.7
     },
     {
       "name": "Southern Asia", 
-      "coordinate": [ 76.456309, 25.03764],
+      "coordinate": [ 76.456309, 22.03764],
       "color": "#93b9c6",
-      "zoom": 2
+      "zoom": 4.8
     },
     {
       "name": "Central and Eastern Europe", 
-      "coordinate": [ 21.014944, 52.232679],
+      "coordinate": [ 100.014944, 62.232679],
       "color": "#ccc5a8",
-      "zoom": 2
+      "zoom": 2.3
     },
     {
       "name": "Latin America and Caribbean", 
-      "coordinate": [ -55.491477, -17.783195],
+      "coordinate": [ -80.491477, -17.783195],
       "color": "#52bacc",
-      "zoom": 2
+      "zoom": 1.6
     },
     {
       "name": "Middle East and Northern Africa", 
@@ -56,9 +56,9 @@
     },
     {
       "name": "Australia and New Zealand", 
-      "coordinate": [ 145.491477, -29.532804],
+      "coordinate": [ 145.491477, -32.532804],
       "color": "#98aafb",
-      "zoom": 2
+      "zoom": 3.5
     }
   ]
 }
