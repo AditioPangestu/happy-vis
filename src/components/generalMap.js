@@ -56,6 +56,22 @@ class GeneralMap extends Component {
 
     this.handleMove = this.handleMove.bind(this)
     this.handleLeave = this.handleLeave.bind(this)
+    this.onViewLoaded = this.onViewLoaded.bind(this)
+  }
+
+  onViewLoaded() {
+    const x = 400;
+    const y = 400;
+
+    this.tip.show(`
+      <div class="tooltip-inner">
+        ${"asd"}
+      </div>      
+    `)
+    this.tip.position({
+      pageX: x,
+      pageY: y
+    })
   }
 
   handleMove(geography, evt) {
@@ -160,6 +176,9 @@ class GeneralMap extends Component {
     if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       return (
         <div>
+
+          <button onClick={this.onViewLoaded}>asdf</button>
+
           <Motion
             defaultStyle={{
               zoom: 1,
