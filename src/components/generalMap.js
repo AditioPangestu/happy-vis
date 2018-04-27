@@ -60,25 +60,17 @@ class GeneralMap extends Component {
   handleMove(geography, evt) {
     const x = evt.clientX
     const y = evt.clientY + window.pageYOffset
-    const mapping = {
-      'Russia': '#deadbeef'
-    }
-      this.tip.show(`
-        <div class="tooltip-inner">
-          ${geography.properties.name}
-        </div>
-      `)
-      this.tip.position({
-        pageX: x,
-        pageY: y
-      })
-
-      var defaultStyle = this.state.default_style
-      
-      this.setState({
-        
-
-      })
+    this.tip.show(`
+      <div class="tooltip-inner">
+        ${geography.properties.name}
+      </div>
+    `)
+    this.tip.position({
+      pageX: x,
+      pageY: y
+    })
+    var defaultStyle = this.state.default_style
+    this.props.handleHover(geography.properties.name);
   }
   handleLeave() {
     this.tip.hide();
@@ -145,13 +137,10 @@ class GeneralMap extends Component {
         this.handleContinentClick(this.state.continents[this.state.continents.findIndex(obj => obj.name == nextProps.viewed)])
       }
     }
-    // console.log('notchanged')
     if (this.props.country_colors != nextProps.country_colors) {
       this.setState({
-        
         fill_color: nextProps.country_colors
       })
-      // console.log('changed')
     }
   }
   
@@ -159,8 +148,6 @@ class GeneralMap extends Component {
     var geographys = []
     // console.log(this.props.country_colors[this.props.country_colors.findIndex(obj => obj.name == "Australia")].color)
     var fill_color = this.props.country_colors
-    console.log('asdf')
-    console.log(fill_color[fill_color.findIndex(obj => obj.name == "Australia")].color)
     if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       return (
         <div>

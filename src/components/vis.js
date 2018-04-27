@@ -25,9 +25,12 @@ class Vis extends Component {
       width : 700,
       prev_absis : 0,
       is_mouse_down : false,
+      country_name : "",
+      handle_data : {}
     };
     this.onChangeDropdown = this.onChangeDropdown.bind(this);
     this.preproccesMapData = this.preproccesMapData.bind(this);
+    this.handleHover = this.handleHover.bind(this);
   }
 
   componentWillMount(){
@@ -158,8 +161,10 @@ class Vis extends Component {
     };
   }
 
-  handleMapHover(country_name){
-
+  handleHover(country_name){
+    this.setState({
+      country_name: country_name
+    })
   }
 
   onChangeDropdown(e){
@@ -192,7 +197,11 @@ class Vis extends Component {
                 style={{
                   width:"700px"
                 }}>
-                <GeneralMap viewed={this.state.viewed_region} country_colors={this.state.map_data} />
+                <GeneralMap 
+                  viewed={this.state.viewed_region}
+                  country_colors={this.state.map_data}
+                  handleHover={this.handleHover}
+                  highlighted_data={this.state.highlighted_data}/>
                 
               </div>
               <div className="column">
