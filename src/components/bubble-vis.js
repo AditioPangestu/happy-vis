@@ -182,7 +182,7 @@ export default class BubbleVis extends Component {
   }
 
   render(){
-    const { AUTO, BOTTOM } = Hint.ALIGN;
+    const { AUTO } = Hint.ALIGN;
     var viewed_highlight_data = {};
     if (this.props.viewed_region == "All") {
       if (!_.isEmpty(this.props.highlighted_data)) {
@@ -192,7 +192,8 @@ export default class BubbleVis extends Component {
         if (index != -1) {
           viewed_highlight_data.y = index + 1;
           viewed_highlight_data.x = parseFloat(this.props.highlighted_data.value);
-          viewed_highlight_data.name = this.props.highlighted_data.country_name
+          viewed_highlight_data.value = parseFloat(this.props.highlighted_data.value).toFixed(2);
+          viewed_highlight_data.name = this.props.highlighted_data.country_name;
         }
       }
     }
@@ -202,7 +203,7 @@ export default class BubbleVis extends Component {
         xDomain={[0, this.props.y_domain]}
         width={150 + (this.props.first ? 160 : 0)}
         height={15*this.props.data.length + 25}
-        margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
+        margin={{ bottom: 0, left: (this.props.first?170:10),top : 25 }}>
         <VerticalGridLines 
           tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
         <HorizontalGridLines 
@@ -297,14 +298,16 @@ export default class BubbleVis extends Component {
               <Hint 
                 align={{
                   horizontal: AUTO,
-                  vertical: BOTTOM
+                  vertical: AUTO
                 }}
                 value={{
-                  y: viewed_highlight_data.y-.2,
+                  y: viewed_highlight_data.y,
                   x: viewed_highlight_data.x,
                 }}>
-                <div className="tag is-dark">
-                  <p className="is-size-7">{viewed_highlight_data.name}</p>
+                <div className="box is-dark is-marginless"
+                  style={{ maxWidth: "100px", padding: ".1rem .3rem", backgroundColor:"#ffffff8c"}}>
+                  <p className="is-size-7"><b>{viewed_highlight_data.value}</b></p>
+                  <p style={{fontSize:".5rem"}}>{viewed_highlight_data.name}</p>
                 </div>
               </Hint>
             )

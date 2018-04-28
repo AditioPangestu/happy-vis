@@ -51,8 +51,8 @@ class Vis extends Component {
               .then((response) => {
                 var country_colors = response.data.data;
                 const temp = _.cloneDeep(country_colors);
-                const aggregates = this.preproccesData(data, regions);
                 const { map_data, max_happy_score, min_happy_score} = this.preproccesMapData(data, country_colors);
+                const aggregates = this.preproccesData(data, regions, max_happy_score, min_happy_score);
                 this.setState({
                   max_happy_score: max_happy_score,
                   min_happy_score: min_happy_score,
@@ -71,10 +71,11 @@ class Vis extends Component {
     })
   }
 
-  preproccesData(data, regions){
+  preproccesData(data, regions, max_happy_score, min_happy_score){
     var atribut_names = ["life_expectancy", "generosity", "trust", "freedom", "family", "gdp"]
     var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"]
     var aggregates = [];
+    const color_scale = chroma.scale(['#33a8d4', '#ffdf36']);
     for (var i = 0; i < atribut_names.length;i++){
       var aggregate = {};
       aggregate.attribute_name = atribut_names[i];
@@ -86,7 +87,8 @@ class Vis extends Component {
       for(var j = 0; j < regions.length;j++){
         var region = {};
         region.name = regions[j].name;
-        region.color = regions[j].color;
+        const happiness_score = this.meanregion(data, "happiness_score", region.name);
+        region.color = color_scale(((happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex();
         region.value = this.meanregion(data, aggregate.attribute_name, region.name);
         aggregate.data.push(region);
       }
@@ -182,7 +184,7 @@ class Vis extends Component {
         
         viewed_region: value,
         map_data: this.preproccesMapData(this.state.data.raw, this.state.country_colors).map_data ,
-        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions)}
+        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions, this.state.max_happy_score, this.state.min_happy_score)}
       });
     } else {
       const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }), this.state.country_colors);
@@ -213,47 +215,51 @@ class Vis extends Component {
                   map_highlighted_data={this.state.map_highlighted_data}/>
                 
               </div>
-              <div className="column">
+              <div className="column"
+                style={{
+                  width: "255px"
+                }}>
                 <div className="content">
-                  <p className="title is-4">World Happiness Score</p>
-                  <ContinuousColorLegend
-                    width={255}
-                    startTitle={parseFloat(this.state.min_happy_score).toFixed(2)}
-                    endTitle={parseFloat(this.state.max_happy_score).toFixed(2)}
-                    startColor="#33a8d4"
-                    endColor="#ffdf36"
-                  />
-                  <p className="is-marginless is-size-7 has-text-justified">
-                    The World Happiness Report was released by the Sustainable Development Solutions Network for the United Nations on March 14, days before World Happiness Day on March 20. The first report was published in 2012, the second in 2013, the third in 2015, and the fourth in the 2016 Update.
+                  <p className="title is-4" style={{marginBottom:".5rem"}}>World Happiness Score</p>
+                  <div style={{margin:".5rem 0 1rem"}}>
+                    <ContinuousColorLegend
+                      width={255}
+                      startTitle={parseFloat(this.state.min_happy_score).toFixed(2)}
+                      endTitle={parseFloat(this.state.max_happy_score).toFixed(2)}
+                      startColor="#33a8d4"
+                      endColor="#ffdf36"
+                    />
+                  </div>
+                  <p className="is-marginless is-size-7 has-text-justified" style={{ width: "255px" }}>
+                    The World Happiness Report was released by the Sustainable Development Solutions Network for the United Nations and first published in 2012. 
                   </p>
-                  <p className="is-marginless is-size-7 has-text-justified">
-                    The overall rankings of country happiness are based on the pooled results from Gallup World Poll surveys from 2015-2017 which show both change and stability. Here, you will find the data of World Happiness Index from 2015 to 2017, with 147 countries indexed in our database.
+                  <p className="is-marginless is-size-7 has-text-justified" style={{ width: "255px" }}>
+                    The report ranks countries on six key variables that support well-being: income, freedom, trust, healthy life expectancy, social support and generosity which reflect what has been broadly found in the research literature to be important in explaining national-level differences in life evaluations. Here, you will find the data of World Happiness Index from 2015 to 2017 for 147 countries indexed in our database.
                   </p>
-                  <p className="is-marginless is-size-7 has-text-justified">
-                    The report ranks countries on six key variables that support well-being: income, freedom, trust, healthy life expectancy, social support and generosity. The variables used reflect what has been broadly found in the research literature to be important in explaining national-level differences in life evaluations. 
-                  </p>                    
-                  <div className="field is-horizontal">
-                    <div className="field-label is-small">
-                      <label className="label">region</label>
-                    </div>
-                    <div className="field-body">
-                      <div className="field is-narrow">
-                        <div className="control">
-                          <div className="select is-fullwidth is-small">
-                            <select onChange={this.onChangeDropdown}>
-                              <option value="All">All</option>
-                              <option value="Eastern Asia">Eastern Asia</option>
-                              <option value="Western Europe">Western Europe</option>
-                              <option value="Southeastern Asia">Southeastern Asia</option>
-                              <option value="North America">North America</option>
-                              <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
-                              <option value="Southern Asia">Southern Asia</option>
-                              <option value="Central and Eastern Europe">Central and Eastern Europe</option>
-                              <option value="Latin America and Caribbean">Latin America and Caribbean</option>
-                              <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
-                              <option value="Australia and New Zealand">Australia and New Zealand</option>
-                            </select>
-                          </div>
+                </div>
+              </div>
+              <div className="column">
+                <div className="field is-horizontal">
+                  <div className="field-label is-small">
+                    <label className="label">region</label>
+                  </div>
+                  <div className="field-body">
+                    <div className="field is-narrow">
+                      <div className="control">
+                        <div className="select is-fullwidth is-small">
+                          <select onChange={this.onChangeDropdown}>
+                            <option value="All">All</option>
+                            <option value="Eastern Asia">Eastern Asia</option>
+                            <option value="Western Europe">Western Europe</option>
+                            <option value="Southeastern Asia">Southeastern Asia</option>
+                            <option value="North America">North America</option>
+                            <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+                            <option value="Southern Asia">Southern Asia</option>
+                            <option value="Central and Eastern Europe">Central and Eastern Europe</option>
+                            <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+                            <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
+                            <option value="Australia and New Zealand">Australia and New Zealand</option>
+                          </select>
                         </div>
                       </div>
                     </div>
@@ -267,7 +273,30 @@ class Vis extends Component {
                 for (var i = 0; i < 6; i++) {
                   bubbles.push(
                     <div className="column" key={i}>
-                      <p className={"is-size-7 title__bar "+((i==0)?"is-first":"")}>{this.state.data.aggregates[i].name} Score</p>
+                      {(()=>{
+                        if(i==0){
+                          return (
+                            <div className="columns is-gapless is-marginless">
+                              <div className="column">
+                                <div style={{position:"relative"}}>
+
+                                  <p className="is-size-7 title__bar has-text-right"
+                                    style={{
+                                      position : "absolute",
+                                      right : 0,
+                                      bottom : "-40px"
+                                    }}>{(this.state.viewed_region == "All")?"Region Name":"Country Name"}</p>
+                                </div>
+                              </div>
+                              <div className="column">
+                                <p className="is-size-7 title__bar is-first">{this.state.data.aggregates[i].name} Score</p>
+                              </div>
+                            </div>
+                          )
+                        } else {
+                          return <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p>;
+                        }
+                      })()}
                       <BubbleVis
                         viewed_region={this.state.viewed_region}
                         first={i == 0}
