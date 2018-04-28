@@ -182,10 +182,10 @@ export default class BubbleVis extends Component {
   }
 
   render(){
-    const { AUTO } = Hint.ALIGN;
+    const { AUTO, BOTTOM} = Hint.ALIGN;
     var viewed_highlight_data = {};
-    if (this.props.viewed_region == "All") {
-      if (!_.isEmpty(this.props.highlighted_data)) {
+    if (!_.isEmpty(this.props.highlighted_data)) {
+      if (this.props.viewed_region == "All") {
         const index = _.findIndex(this.props.data, (datum) => {
           return (datum.name == this.props.highlighted_data.region_name)
         });
@@ -195,6 +195,14 @@ export default class BubbleVis extends Component {
           viewed_highlight_data.value = parseFloat(this.props.highlighted_data.value).toFixed(2);
           viewed_highlight_data.name = this.props.highlighted_data.country_name;
         }
+      } else {
+        const index = _.findIndex(this.props.data, (datum) => {
+          return (datum.name == this.props.highlighted_data.country_name)
+        });
+        viewed_highlight_data.y = index + 1;
+        viewed_highlight_data.x = parseFloat(this.props.highlighted_data.value);
+        viewed_highlight_data.value = parseFloat(this.props.highlighted_data.value).toFixed(2);
+        viewed_highlight_data.name = this.props.highlighted_data.country_name;
       }
     }
     return (
@@ -202,7 +210,7 @@ export default class BubbleVis extends Component {
         colorType="literal"
         xDomain={[0, this.props.y_domain]}
         width={150 + (this.props.first ? 160 : 0)}
-        height={15*this.props.data.length + 25}
+        height={18*this.props.data.length + 25}
         margin={{ bottom: 0, left: (this.props.first?170:10),top : 25 }}>
         <VerticalGridLines 
           tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
@@ -293,15 +301,15 @@ export default class BubbleVis extends Component {
           }
         })()}
         {(()=>{
-          if ((this.props.viewed_region == "All") && (!_.isEmpty(viewed_highlight_data))) {
+          if (!_.isEmpty(viewed_highlight_data)) {
             return (
               <Hint 
                 align={{
                   horizontal: AUTO,
-                  vertical: AUTO
+                  vertical: BOTTOM
                 }}
                 value={{
-                  y: viewed_highlight_data.y,
+                  y: viewed_highlight_data.y - .5,
                   x: viewed_highlight_data.x,
                 }}>
                 <div className="box is-dark is-marginless"
