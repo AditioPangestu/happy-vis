@@ -35,6 +35,7 @@ class Vis extends Component {
     this.preproccesMapData = this.preproccesMapData.bind(this);
     this.handleBubbleHover = this.handleBubbleHover.bind(this);
     this.handleHover = this.handleHover.bind(this);
+    this.onRankedHover = this.onRankedHover.bind(this);
   }
 
   componentWillMount(){
@@ -196,6 +197,16 @@ class Vis extends Component {
     });
   }
 
+  onRankedHover(country_name) {
+    const datum_index = _.findIndex(this.state.data.raw, (datum) => {
+      return datum.country == country_name;
+    });
+    if (datum_index != -1) {
+      const datum = this.state.data.raw[datum_index];
+      this.handleBubbleHover(datum, datum);
+    }
+  }
+
   onChangeDropdown(e){
     const {value} = e.target;
     if(value == "All"){
@@ -267,10 +278,11 @@ class Vis extends Component {
                   <p className="has-text-left">in</p>
                   <div className="level is-marginless">
                     <div className="level-left">
-                      <div className="level-item">
+                      <div className="level-item"
+                        style={{marginRight:".3rem"}}>
                         <div className="control">
                           <div className="select is-small"
-                            style={{width:"100px"}}>
+                            style={{width:"135px"}}>
                               <select onChange={this.onChangeDropdown}>
                                 <option value="All">All</option>
                                 <option value="Eastern Asia">Eastern Asia</option>
@@ -288,7 +300,7 @@ class Vis extends Component {
                         </div>
                       </div>
                       <div className="level-item">
-                        <p className="title is-6 has-text-left">Region</p>
+                        <p className="title is-7 has-text-left">Region</p>
                       </div>
                     </div>
                   </div>
@@ -303,10 +315,14 @@ class Vis extends Component {
                     </div>
                   </div>
                   <div>
-                    <p className="title is-6" style={{margin: ".5rem 0 .5rem"}}>Top {this.state.top_3.length} Country</p>
+                    <p className="title is-7" style={{ margin: ".5rem 0 .5rem" }}>Top {this.state.top_3.length} Countries</p>
                     {_.map(this.state.top_3,(datum, index)=>{
                       return (
-                        <div className="content is-marginless" key={index}>
+                        <div
+                          onMouseOver={() => { this.onRankedHover(datum.country) }}
+                          onMouseOut={() => { this.handleBubbleHover({}, {}) }}
+                          className="content is-marginless"
+                          key={index}>
                           <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
                           <RankedVis
                             color={datum.color}
@@ -317,10 +333,14 @@ class Vis extends Component {
                     })}
                   </div>
                   <div>
-                    <p className="title is-6" style={{ margin: "0.5rem 0" }}>Worst {this.state.down_3.length} Country</p>
+                    <p className="title is-7" style={{ margin: "0.5rem 0" }}>Worst {this.state.down_3.length} Countries</p>
                     {_.map(this.state.down_3,(datum, index)=>{
                       return (
-                        <div className="content is-marginless" key={index}>
+                        <div
+                          onMouseOver={()=>{this.onRankedHover(datum.country)}}
+                          onMouseOut={()=>{this.handleBubbleHover({},{})}}
+                          className="content is-marginless"
+                          key={index}>
                           <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
                           <RankedVis
                             color={datum.color}
