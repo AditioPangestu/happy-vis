@@ -5,8 +5,7 @@ import chroma from "chroma-js";
 import GeneralMap from "./generalMap";
 import BubbleVis from "./bubble-vis";
 import Legends from "./legend";
-
-
+import {ContinuousColorLegend} from "react-vis";
 
 class Vis extends Component {
   constructor(props){
@@ -27,10 +26,13 @@ class Vis extends Component {
       prev_absis : 0,
       is_mouse_down : false,
       country_name : "",
-      highlighted_data : {}
+      highlighted_data : {},
+      max_happy_score:0,
+      min_happy_score:0,
     };
     this.onChangeDropdown = this.onChangeDropdown.bind(this);
     this.preproccesMapData = this.preproccesMapData.bind(this);
+    this.handleBubbleHover = this.handleBubbleHover.bind(this);
     this.handleHover = this.handleHover.bind(this);
   }
 
@@ -50,14 +52,14 @@ class Vis extends Component {
                 var country_colors = response.data.data;
                 const temp = _.cloneDeep(country_colors);
                 const aggregates = this.preproccesData(data, regions);
-                const map_data = this.preproccesMapData(data, country_colors);
+                const { map_data, max_happy_score, min_happy_score} = this.preproccesMapData(data, country_colors);
                 this.setState({
-                  
+                  max_happy_score: max_happy_score,
+                  min_happy_score: min_happy_score,
                   country_colors: temp,
                   map_data: map_data,
                   data: { raw: data, aggregates: aggregates  }
                 })
-                // console.log("country_colors-after", temp);
               });
           });
       });
@@ -101,7 +103,7 @@ class Vis extends Component {
     const min_happy_score = parseFloat(_.minBy(data, (datum) => {
       return parseFloat(datum.happiness_score);
     }).happiness_score);
-    const color_scale = chroma.scale(['#01abce', '#ffca08']).mode('lab');
+    const color_scale = chroma.scale(['#33a8d4', '#ffdf36']);
     for (var j = 0; j < map_data.length;j++){
       const country_color = map_data[j];
       const index = _.findIndex(data,(datum)=>{
@@ -111,7 +113,11 @@ class Vis extends Component {
         map_data[j].color = color_scale(((data[index].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
       }
     }
-    return map_data;
+    return {
+      map_data,
+      max_happy_score,
+      min_happy_score,
+    };
   }
 
   preproccesregionData(data, region, country_colors) {
@@ -119,14 +125,8 @@ class Vis extends Component {
     var atribut_reader_names = ["Life Expectancy", "Generosity", "Trust", "Freedom", "Family", "GDP"];
     var aggregates = [];
     var map_data = _.cloneDeep(country_colors);
-    const color_scale = chroma.scale(['#01abce', '#ffca08']).mode('lab');    
+    const color_scale = chroma.scale(['#33a8d4', '#ffdf36']);    
     const region_data = _.filter(data,(datum)=>{return (datum.region == region.name)});
-    const max_happy_score = parseFloat(_.maxBy(region_data, (datum) => {
-      return parseFloat(datum.happiness_score);
-    }).happiness_score);
-    const min_happy_score = parseFloat(_.minBy(region_data, (datum) => {
-      return parseFloat(datum.happiness_score);
-    }).happiness_score);
     for (var i = 0; i < atribut_names.length; i++) {
       var aggregate = {}
       aggregate.attribute_name = atribut_names[i];
@@ -143,7 +143,7 @@ class Vis extends Component {
         aggregates[j].data.push({
           name: datum.country,
           value: parseFloat(datum[[atribut_names[j]]]),
-          color: color_scale(((region_data[i].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+          color: color_scale(((region_data[i].happiness_score - this.state.min_happy_score) / (this.state.max_happy_score - this.state.min_happy_score))).hex()
         });
       }
     }
@@ -153,7 +153,7 @@ class Vis extends Component {
         return datum.country == country_color.name;
       });
       if (index != -1) {
-        map_data[j].color = color_scale(((region_data[index].happiness_score - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+        map_data[j].color = color_scale(((region_data[index].happiness_score - this.state.min_happy_score) / (this.state.max_happy_score - this.state.min_happy_score))).hex()
       }
     }
     return {
@@ -168,13 +168,20 @@ class Vis extends Component {
     })
   }
 
+  handleBubbleHover(highlighted_data, map_highlighted_data){
+    this.setState({
+      highlighted_data: highlighted_data,
+      map_highlighted_data: map_highlighted_data,
+    })
+  }
+
   onChangeDropdown(e){
     const {value} = e.target;
     if(value == "All"){
       this.setState({
         
         viewed_region: value,
-        map_data: this.preproccesMapData(this.state.data.raw, this.state.country_colors) ,
+        map_data: this.preproccesMapData(this.state.data.raw, this.state.country_colors).map_data ,
         data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions)}
       });
     } else {
@@ -196,19 +203,35 @@ class Vis extends Component {
             <div className="columns is-gapless is-marginless">
               <div className="column is-9"
                 style={{
-                  width:"700px"
+                  width:"652px"
                 }}>
                 <GeneralMap
                   raw={this.state.data.raw}
                   viewed={this.state.viewed_region}
                   country_colors={this.state.map_data}
                   handleHover={this.handleHover}
-                  highlighted_data={this.state.highlighted_data}/>
+                  map_highlighted_data={this.state.map_highlighted_data}/>
                 
               </div>
               <div className="column">
                 <div className="content">
                   <p className="title is-4">World Happiness Score</p>
+                  <ContinuousColorLegend
+                    width={255}
+                    startTitle={parseFloat(this.state.min_happy_score).toFixed(2)}
+                    endTitle={parseFloat(this.state.max_happy_score).toFixed(2)}
+                    startColor="#33a8d4"
+                    endColor="#ffdf36"
+                  />
+                  <p className="is-marginless is-size-7 has-text-justified">
+                    The World Happiness Report was released by the Sustainable Development Solutions Network for the United Nations on March 14, days before World Happiness Day on March 20. The first report was published in 2012, the second in 2013, the third in 2015, and the fourth in the 2016 Update.
+                  </p>
+                  <p className="is-marginless is-size-7 has-text-justified">
+                    The overall rankings of country happiness are based on the pooled results from Gallup World Poll surveys from 2015-2017 which show both change and stability. Here, you will find the data of World Happiness Index from 2015 to 2017, with 147 countries indexed in our database.
+                  </p>
+                  <p className="is-marginless is-size-7 has-text-justified">
+                    The report ranks countries on six key variables that support well-being: income, freedom, trust, healthy life expectancy, social support and generosity. The variables used reflect what has been broadly found in the research literature to be important in explaining national-level differences in life evaluations. 
+                  </p>                    
                   <div className="field is-horizontal">
                     <div className="field-label is-small">
                       <label className="label">region</label>
@@ -268,6 +291,8 @@ class Vis extends Component {
                             }
                           })()
                         }
+                        handleBubbleHover={this.handleBubbleHover}
+                        raw={this.state.data.raw}
                         name={this.state.data.aggregates[i].name}
                         width={this.state.width}
                         height={400}

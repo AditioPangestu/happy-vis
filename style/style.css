@@ -28,3 +28,11 @@
 .field:not(:last-child) {
   margin-bottom: -.8rem;
 }
+
+body {
+  background-color: #fdfdfd;
+}
+
+.section {
+  padding: 1.5rem 1rem 1.5rem;
+}

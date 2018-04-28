@@ -46,6 +46,18 @@ export default class BubbleVis extends Component {
       ],
       x_ticks: []
     }
+    this.onHover = this.onHover.bind(this);
+  }
+
+  onHover(value){
+    const index = Math.floor(value.y0);
+    const datum_index = _.findIndex(this.props.raw, (datum) => {
+      return datum.country == this.props.data[index].name
+    });
+    if (datum_index != -1) {
+      const datum = this.props.raw[datum_index];
+      this.props.handleBubbleHover(datum, datum);
+    }
   }
 
   componentWillMount(){
@@ -189,7 +201,7 @@ export default class BubbleVis extends Component {
         colorType="literal"
         xDomain={[0, this.props.y_domain]}
         width={150 + (this.props.first ? 160 : 0)}
-        height={15*this.props.data.length + 25}
+        height={13*this.props.data.length + 25}
         margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
         <HorizontalGridLines />
         <VerticalGridLines 
@@ -247,12 +259,28 @@ export default class BubbleVis extends Component {
           }
           return line_series;
         })()}
+        
         <MarkSeries
+          size={4}
           data={this.state.preprocessed_data} />
+        <VerticalRectSeries
+          onValueMouseOver={this.onHover}
+          onValueMouseOut={() => { this.props.handleBubbleHover({}, {})}}
+          data={_.map(this.state.preprocessed_data,(datum, index)=>{
+            return {
+              x0 : 0,
+              x : this.props.y_domain,
+              y0 : ((index)*1+.5),
+              y : ((index+1)*1+.5),
+              opacity : 0
+            }
+          })}
+        />
         {(()=>{
           if ((this.props.viewed_region == "All") && (!_.isEmpty(viewed_highlight_data))) {
             return (
               <MarkSeries
+                size={4}
                 data={[{
                   y: viewed_highlight_data.y,
                   x: viewed_highlight_data.x,
@@ -280,6 +308,7 @@ export default class BubbleVis extends Component {
             )
           }
         })()}
+
       </XYPlot>
     );
   }

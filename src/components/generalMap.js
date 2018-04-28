@@ -91,8 +91,8 @@ class GeneralMap extends Component {
 
   handleMove(geography, evt) {
     const x = evt.clientX
-    // const y = evt.clientY + window.pageYOffset
-    const y = evt.clientY 
+    const y = evt.clientY + window.pageYOffset
+    // const y = evt.clientY 
     const index = _.findIndex(this.props.raw, (datum)=>{
       return datum.country == geography.properties.name
     });
@@ -187,15 +187,15 @@ class GeneralMap extends Component {
       })
       this.props.handleHover(datum);
     } else {
-      this.tip.show(`
-        <div class="tooltip-inner">
-          ${geography.properties.name}
-        </div>
-      `)
-      this.tip.position({
-        pageX: x,
-        pageY: y
-      })
+      // this.tip.show(`
+      //   <div class="tooltip-inner">
+      //     ${geography.properties.name}
+      //   </div>
+      // `)
+      // this.tip.position({
+      //   pageX: x,
+      //   pageY: y
+      // })
       this.props.handleHover({});
     }
     var defaultStyle = this.state.default_style
@@ -299,7 +299,7 @@ class GeneralMap extends Component {
       return (
         <div>
 
-          <button onClick={this.onViewLoaded}>asdf</button>
+          {/* <button onClick={this.onViewLoaded}>asdf</button> */}
 
           <Motion
             defaultStyle={{
@@ -316,11 +316,11 @@ class GeneralMap extends Component {
           {({zoom,x,y}) => (
             <ComposableMap
               projectionConfig={{
-                scale: 147.28,
+                scale: 137.28,
                 rotation: [-11, 0, 0],
               }}
-              width={700}
-              height={385.58}
+              width={635.406400747}
+              height={350}
             >
               <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning>
                 <Geographies geography="./src/data/world-50m.json" disableOptimization={this.state.disableOptimization}>
