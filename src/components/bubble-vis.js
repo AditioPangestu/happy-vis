@@ -10,7 +10,8 @@ import {
   VerticalRectSeries,
   MarkSeries,
   LineSeries,
-  Hint
+  Hint,
+  Borders
 } from 'react-vis';
 
 export default class BubbleVis extends Component {
@@ -208,27 +209,16 @@ export default class BubbleVis extends Component {
     return (
       <XYPlot
         colorType="literal"
-        xDomain={[0, this.props.y_domain]}
         width={150 + (this.props.first ? 160 : 0)}
-        height={18*this.props.data.length + 25}
-        margin={{ bottom: 0, left: (this.props.first?170:10),top : 25 }}>
+        height={205}
+        yDomain={[.5,10.5]}
+        xDomain={[0, this.props.y_domain]}
+        margin={{ bottom: 0, left: (this.props.first?170:10),top : 25 }}
+        yRange={[0, 205 - 25]}>
         <VerticalGridLines 
           tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
         <HorizontalGridLines 
           tickValues={_.range(1, this.props.data.length+1)}/>
-        <XAxis
-          orientation="top"
-          hideLine
-          tickValues={_.map(this.state.ticks, (tick)=>{return tick.value})}/>
-        {(()=>{
-          if(this.props.first){
-            return (
-              <YAxis
-                tickValues={_.map(this.state.x_ticks, (tick) => { return tick.value })}
-                tickFormat={(value) => { return this.state.x_ticks[value - 1].name }} />
-            )
-          }
-        })()}
         {(() => {
           var line_series = [];
           for (var i = 0; i < this.props.data.length; i++) {
@@ -321,7 +311,25 @@ export default class BubbleVis extends Component {
             )
           }
         })()}
-
+        <Borders style={{
+          bottom: { fill: '#fdfdfd' },
+          left: { fill: '#fdfdfd' },
+          right: { fill: 'transparent' },
+          top: { fill: '#fdfdfd' }
+        }} />
+        <XAxis
+          orientation="top"
+          hideLine
+          tickValues={_.map(this.state.ticks, (tick) => { return tick.value })} />
+        {(() => {
+          if (this.props.first) {
+            return (
+              <YAxis
+                tickValues={_.map(this.state.x_ticks, (tick) => { return tick.value })}
+                tickFormat={(value) => { return this.state.x_ticks[value - 1].name }} />
+            )
+          }
+        })()}
       </XYPlot>
     );
   }

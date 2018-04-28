@@ -368,9 +368,11 @@ class Vis extends Component {
 
                                   <p className="is-size-7 title__bar has-text-right"
                                     style={{
+                                      backgroundColor: "#fdfdfd",
+                                      zIndex : 999999,
                                       position : "absolute",
                                       right : 0,
-                                      bottom : "-40px"
+                                      bottom : "-35px"
                                     }}>{(this.state.viewed_region == "All")?"Region Name":"Country Name"}</p>
                                 </div>
                               </div>
