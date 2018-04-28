@@ -201,13 +201,15 @@ export default class BubbleVis extends Component {
         colorType="literal"
         xDomain={[0, this.props.y_domain]}
         width={150 + (this.props.first ? 160 : 0)}
-        height={13*this.props.data.length + 25}
+        height={15*this.props.data.length + 25}
         margin={{ bottom: 10, left: (this.props.first?170:10),top : 25 }}>
-        <HorizontalGridLines />
         <VerticalGridLines 
           tickValues={_.map(this.state.ticks, (tick) => { return tick.value })}/>
+        <HorizontalGridLines 
+          tickValues={_.range(1, this.props.data.length+1)}/>
         <XAxis
           orientation="top"
+          hideLine
           tickValues={_.map(this.state.ticks, (tick)=>{return tick.value})}/>
         {(()=>{
           if(this.props.first){
@@ -298,7 +300,7 @@ export default class BubbleVis extends Component {
                   vertical: BOTTOM
                 }}
                 value={{
-                  y: viewed_highlight_data.y-.5,
+                  y: viewed_highlight_data.y-.2,
                   x: viewed_highlight_data.x,
                 }}>
                 <div className="tag is-dark">
