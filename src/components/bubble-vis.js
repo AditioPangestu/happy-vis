@@ -314,8 +314,8 @@ export default class BubbleVis extends Component {
                 }}>
                 <div className="box is-dark is-marginless"
                   style={{ maxWidth: "100px", padding: ".1rem .3rem", backgroundColor:"#ffffff8c"}}>
-                  <p className="is-size-7"><b>{viewed_highlight_data.value}</b></p>
-                  <p style={{fontSize:".5rem"}}>{viewed_highlight_data.name}</p>
+                  <p className="is-size-7 is-marginless"><b>{viewed_highlight_data.value}</b></p>
+                  <p style={{fontSize:".6rem"}}>{viewed_highlight_data.name}</p>
                 </div>
               </Hint>
             )

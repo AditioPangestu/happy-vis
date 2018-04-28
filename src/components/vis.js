@@ -5,6 +5,7 @@ import chroma from "chroma-js";
 import GeneralMap from "./generalMap";
 import BubbleVis from "./bubble-vis";
 import Legends from "./legend";
+import RankedVis from "./ranked-vis";
 import {ContinuousColorLegend} from "react-vis";
 
 class Vis extends Component {
@@ -41,7 +42,6 @@ class Vis extends Component {
       .then((response) => {
         const regions = response.data.data;
         this.setState({
-          
           regions: regions
         })
         axios.get('./src/data/ranked_2017.json')
@@ -58,7 +58,9 @@ class Vis extends Component {
                   min_happy_score: min_happy_score,
                   country_colors: temp,
                   map_data: map_data,
-                  data: { raw: data, aggregates: aggregates  }
+                  data: { raw: data, aggregates: aggregates  },
+                  top_3: this.preproccesRankedData(data,max_happy_score,min_happy_score,false),
+                  down_3: this.preproccesRankedData(data,max_happy_score,min_happy_score,true),
                 })
               });
           });
@@ -177,22 +179,42 @@ class Vis extends Component {
     })
   }
 
+  preproccesRankedData(data,max_happy_score,min_happy_score, desc){
+    const color_scale = chroma.scale(['#33a8d4', '#ffdf36']);
+    var sorted_data = [];
+    if (desc){
+      sorted_data = _.sortBy(data, (datum)=>{return (-datum.happiness_rank)});
+    } else {
+      sorted_data = _.sortBy(data, (datum)=>{return datum.happiness_rank});
+    }
+    return _.map(_.take(sorted_data,3),(datum)=>{
+      return {
+        happiness_score : parseFloat(datum.happiness_score),
+        country : datum.country,
+        color: color_scale(((parseFloat(datum.happiness_score) - min_happy_score) / (max_happy_score - min_happy_score))).hex()
+      }
+    });
+  }
+
   onChangeDropdown(e){
     const {value} = e.target;
     if(value == "All"){
       this.setState({
-        
         viewed_region: value,
         map_data: this.preproccesMapData(this.state.data.raw, this.state.country_colors).map_data ,
-        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions, this.state.max_happy_score, this.state.min_happy_score)}
+        data: { raw: this.state.data.raw, aggregates: this.preproccesData(this.state.data.raw, this.state.regions, this.state.max_happy_score, this.state.min_happy_score)},
+        top_3: this.preproccesRankedData(this.state.data.raw, this.state.max_happy_score, this.state.min_happy_score, false),
+        down_3: this.preproccesRankedData(this.state.data.raw, this.state.max_happy_score, this.state.min_happy_score, true)
       });
     } else {
       const { aggregates, map_data } = this.preproccesregionData(this.state.data.raw, _.find(this.state.regions, { name: value }), this.state.country_colors);
+      const region_data = _.filter(this.state.data.raw, (datum) => { return (datum.region == value) });
       this.setState({
-        
         viewed_region: value,
         map_data: map_data,
-        data: { raw: this.state.data.raw, aggregates: aggregates }
+        data: { raw: this.state.data.raw, aggregates: aggregates },
+        top_3: this.preproccesRankedData(region_data, this.state.max_happy_score, this.state.min_happy_score, false),
+        down_3: this.preproccesRankedData(region_data, this.state.max_happy_score, this.state.min_happy_score, true)
       });
     }
   }
@@ -219,7 +241,7 @@ class Vis extends Component {
                 style={{
                   width: "255px"
                 }}>
-                <div className="content">
+                <div className="content is-marginless">
                   <p className="title is-4" style={{marginBottom:".5rem"}}>World Happiness Score</p>
                   <div style={{margin:".5rem 0 1rem"}}>
                     <ContinuousColorLegend
@@ -237,32 +259,76 @@ class Vis extends Component {
                     The report ranks countries on six key variables that support well-being: income, freedom, trust, healthy life expectancy, social support and generosity which reflect what has been broadly found in the research literature to be important in explaining national-level differences in life evaluations. Here, you will find the data of World Happiness Index from 2015 to 2017 for 147 countries indexed in our database.
                   </p>
                 </div>
+                
               </div>
-              <div className="column">
-                <div className="field is-horizontal">
-                  <div className="field-label is-small">
-                    <label className="label">region</label>
-                  </div>
-                  <div className="field-body">
-                    <div className="field is-narrow">
-                      <div className="control">
-                        <div className="select is-fullwidth is-small">
-                          <select onChange={this.onChangeDropdown}>
-                            <option value="All">All</option>
-                            <option value="Eastern Asia">Eastern Asia</option>
-                            <option value="Western Europe">Western Europe</option>
-                            <option value="Southeastern Asia">Southeastern Asia</option>
-                            <option value="North America">North America</option>
-                            <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
-                            <option value="Southern Asia">Southern Asia</option>
-                            <option value="Central and Eastern Europe">Central and Eastern Europe</option>
-                            <option value="Latin America and Caribbean">Latin America and Caribbean</option>
-                            <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
-                            <option value="Australia and New Zealand">Australia and New Zealand</option>
-                          </select>
+              <div className="column"
+                style={{marginLeft : "1rem"}}>
+                <div>
+                  <p className="has-text-left">in</p>
+                  <div className="level is-marginless">
+                    <div className="level-left">
+                      <div className="level-item">
+                        <div className="control">
+                          <div className="select is-small"
+                            style={{width:"100px"}}>
+                              <select onChange={this.onChangeDropdown}>
+                                <option value="All">All</option>
+                                <option value="Eastern Asia">Eastern Asia</option>
+                                <option value="Western Europe">Western Europe</option>
+                                <option value="Southeastern Asia">Southeastern Asia</option>
+                                <option value="North America">North America</option>
+                                <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+                                <option value="Southern Asia">Southern Asia</option>
+                                <option value="Central and Eastern Europe">Central and Eastern Europe</option>
+                                <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+                                <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
+                                <option value="Australia and New Zealand">Australia and New Zealand</option>
+                              </select>
+                            </div>
                         </div>
                       </div>
+                      <div className="level-item">
+                        <p className="title is-6 has-text-left">Region</p>
+                      </div>
                     </div>
+                  </div>
+                  <div className="control">
+                    <div className="select is-small"
+                      style={{ marginTop: ".3rem" }}>
+                      <select>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="title is-6" style={{margin: ".5rem 0 .5rem"}}>Top {this.state.top_3.length} Country</p>
+                    {_.map(this.state.top_3,(datum, index)=>{
+                      return (
+                        <div className="content is-marginless" key={index}>
+                          <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
+                          <RankedVis
+                            color={datum.color}
+                            x={parseFloat(datum.happiness_score)}
+                            x_domain={this.state.max_happy_score}/>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div>
+                    <p className="title is-6" style={{ margin: "0.5rem 0" }}>Worst {this.state.down_3.length} Country</p>
+                    {_.map(this.state.down_3,(datum, index)=>{
+                      return (
+                        <div className="content is-marginless" key={index}>
+                          <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
+                          <RankedVis
+                            color={datum.color}
+                            x={parseFloat(datum.happiness_score)}
+                            x_domain={this.state.max_happy_score}/>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
