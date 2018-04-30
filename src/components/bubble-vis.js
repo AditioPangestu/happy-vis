@@ -52,7 +52,12 @@ export default class BubbleVis extends Component {
 
   onHover(value){
     const index = Math.floor(value.y0);
-    const sliced_data = _.slice(this.props.data, this.props.scroll_index.index * 10, this.props.scroll_index.index * 10 + 10);
+    var sliced_data = [];
+    if(this.props.scroll_index.index == "All"){
+      sliced_data = this.props.data;
+    } else {
+      sliced_data = _.slice(this.props.data, this.props.scroll_index.index * 10, this.props.scroll_index.index * 10 + 10);
+    }
     const datum_index = _.findIndex(this.props.raw, (datum) => {
       return datum.country == sliced_data[index].name
     });
@@ -83,7 +88,12 @@ export default class BubbleVis extends Component {
     var gap = y_domain/4;
     const start_slice = scroll_index*10;
     const end_slice = start_slice+10;
-    const slice_data = _.slice(data, start_slice, end_slice);
+    var slice_data;
+    if(scroll_index == "All"){
+      slice_data = data;
+    } else {
+      slice_data = _.slice(data, start_slice, end_slice);
+    }
     for(var i=0;i<5;i++){
       var tick = {};
       tick.name = i*gap;
@@ -153,41 +163,50 @@ export default class BubbleVis extends Component {
       tick.value = i + 1;
       x_ticks.push(tick);
     }
-    var start_slice = 0;
-    while(start_slice != Math.floor(index/10)){
-      start_slice++;
-    }
-    const new_scroll_index = start_slice;
-    start_slice *= 10;
-    const end_slice = start_slice+10;
-    var new_preprocessed_data = [];
-    var y = 1;
-    for (var i = 0; i < preprocessed_data.length;i++){
-      if((i < end_slice) && (i >= start_slice)){
-        new_preprocessed_data.push({
-          ...preprocessed_data[i],
-          y: y
-        });
-        y++;
+    if(this.props.scroll_index.index != "All"){
+      var start_slice = 0;
+      while(start_slice != Math.floor(index/10)){
+        start_slice++;
       }
-    }
-    var new_x_ticks = [];
-    y = 1;
-    for (var i = 0; i < x_ticks.length; i++){
-      if((i < end_slice) && (i >= start_slice)){
-        new_x_ticks.push({
-          ...x_ticks[i],
-          value: y
-        });
-        y++;
+      const new_scroll_index = start_slice;
+      start_slice *= 10;
+      const end_slice = start_slice+10;
+      var new_preprocessed_data = [];
+      var y = 1;
+      for (var i = 0; i < preprocessed_data.length;i++){
+        if((i < end_slice) && (i >= start_slice)){
+          new_preprocessed_data.push({
+            ...preprocessed_data[i],
+            y: y
+          });
+          y++;
+        }
       }
+      var new_x_ticks = [];
+      y = 1;
+      for (var i = 0; i < x_ticks.length; i++){
+        if((i < end_slice) && (i >= start_slice)){
+          new_x_ticks.push({
+            ...x_ticks[i],
+            value: y
+          });
+          y++;
+        }
+      }
+      return {
+        new_scroll_index,
+        ticks,
+        x_ticks: new_x_ticks,
+        preprocessed_data: new_preprocessed_data
+      };
+    } else {
+      return {
+        new_scroll_index : "All",
+        ticks,
+        x_ticks: x_ticks,
+        preprocessed_data: preprocessed_data
+      };
     }
-    return {
-      new_scroll_index,
-      ticks,
-      x_ticks: new_x_ticks,
-      preprocessed_data: new_preprocessed_data
-    };
   }
 
   componentWillReceiveProps(nextProps){
@@ -248,7 +267,12 @@ export default class BubbleVis extends Component {
   render(){
     const { AUTO, BOTTOM} = Hint.ALIGN;
     var viewed_highlight_data = {};
-    const sliced_data = _.slice(this.props.data, this.props.scroll_index.index * 10, this.props.scroll_index.index * 10 + 10);
+    var sliced_data = [];
+    if (this.props.scroll_index.index == "All"){
+      sliced_data = this.props.data;
+    } else {
+      sliced_data = _.slice(this.props.data, this.props.scroll_index.index * 10, this.props.scroll_index.index * 10 + 10);
+    }
     if (!_.isEmpty(this.props.highlighted_data)) {
       if (this.props.viewed_region == "All") {
         const index = _.findIndex(sliced_data, (datum) => {
@@ -274,7 +298,7 @@ export default class BubbleVis extends Component {
       <XYPlot
         colorType="literal"
         width={150 + (this.props.first ? 160 : 0)}
-        height={205}
+        height={(this.props.scroll_index.index == "All")?(25 + 18*this.props.data.length):205}
         yDomain={[.5,10.5]}
         xDomain={[0, this.props.y_domain]}
         margin={{ bottom: 0, left: (this.props.first?170:10),top : 25 }}

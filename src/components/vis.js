@@ -234,22 +234,24 @@ class Vis extends Component {
 
   onWheel(event){
     event.preventDefault();
-    if (event.deltaY < 0) {
-      const scroll_index = this.state.scroll_index.index - 1;
-      this.setState({
-        scroll_index: {
-          index : scroll_index < 0 ? 0 : scroll_index,
-          update : true,
-        }
-      });
-    } else {
-      const scroll_index = this.state.scroll_index.index + 1;
-      this.setState({
-        scroll_index: {
-          index : (scroll_index > (Math.ceil(this.state.data.aggregates[0].data.length / 10)-1) ? Math.ceil(this.state.data.aggregates[0].data.length / 10)-1 : scroll_index),
-          update : true
-        }
-      });
+    if(this.state.index != "All"){
+      if (event.deltaY < 0) {
+        const scroll_index = this.state.scroll_index.index - 1;
+        this.setState({
+          scroll_index: {
+            index : scroll_index < 0 ? 0 : scroll_index,
+            update : true,
+          }
+        });
+      } else {
+        const scroll_index = this.state.scroll_index.index + 1;
+        this.setState({
+          scroll_index: {
+            index : (scroll_index > (Math.ceil(this.state.data.aggregates[0].data.length / 10)-1) ? Math.ceil(this.state.data.aggregates[0].data.length / 10)-1 : scroll_index),
+            update : true
+          }
+        });
+      }
     }
   }
 
