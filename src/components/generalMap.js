@@ -56,7 +56,8 @@ class GeneralMap extends Component {
         },
       },
       country_colors: [],
-      disableOptimization: false
+      disableOptimization: false,
+      tooltips_data: {}
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this)
@@ -74,19 +75,111 @@ class GeneralMap extends Component {
     console.log(evt.clientX + ', ' + evt.clientY)
   }
 
-  onViewLoaded() {
-    const x = 501;
-    const y = 456;
+  onViewLoaded(passed_data) {
+    if (_.isEmpty(this.state.tooltips_data)) {
+      return
+    }
+    // console.log(this.state.tooltips_data)
+    const x = this.state.tooltips_data[passed_data.country][0];
+    const y = this.state.tooltips_data[passed_data.country][1];
 
-    this.tip.show(`
-      <div class="tooltip-inner">
-        ${"asd"}
-      </div>      
-    `)
-    this.tip.position({
-      pageX: x,
-      pageY: y
-    })
+    const index = _.findIndex(this.props.raw, (datum) => {
+      return datum.country == passed_data.country
+    });
+
+    if ((index != -1) && ((this.props.raw[index].region == this.props.viewed) || (this.props.viewed == "All"))) {
+      const datum = this.props.raw[index];
+      this.tip.show(`
+        <div>
+          <p class="is-size-6"><b>${datum.country + " "}</b><span class="is-size-7">${parseFloat(datum.happiness_score).toFixed(2)}</span></p>
+          <div class="columns is-mobile is-gapless">
+            <div class="column">
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Life Expectancy</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.life_expectancy).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Generosity</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.generosity).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Trust</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.trust).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="column">
+              <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Freedom</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.freedom).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">Family</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.family).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-small">
+                <label class="label">GDP</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <div class="control">
+                    <span class="is-size-7">${parseFloat(datum.gdp).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      `)
+      this.tip.position({
+        pageX: x,
+        pageY: y
+      })
+      this.props.handleHover(datum);
+    } else {
+      this.props.handleHover({});
+    }
   }
 
   handleMove(geography, evt) {
@@ -179,6 +272,14 @@ class GeneralMap extends Component {
               
               continents: continents_centroid
             })
+            axios.get('./src/data/tooltips.json')
+              .then((response) => {
+                var tooltips_data = response.data;
+                this.setState({
+
+                  tooltips_data: tooltips_data
+                })
+              })
           })
       })
   }
@@ -210,6 +311,13 @@ class GeneralMap extends Component {
       // this.setState({
       //   fill_color: nextProps.country_colors
       // })
+    }
+    if (this.props.map_highlighted_data != nextProps.map_highlighted_data) {
+      if (!_.isEmpty(nextProps.map_highlighted_data)) {
+        this.onViewLoaded(nextProps.map_highlighted_data);
+      } else {
+        this.tip.hide()
+      }
     }
   }
   
