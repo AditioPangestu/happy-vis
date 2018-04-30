@@ -387,7 +387,7 @@ export default class BubbleVis extends Component {
                   vertical: BOTTOM
                 }}
                 value={{
-                  y: viewed_highlight_data.y + .5,
+                  y: viewed_highlight_data.y + .3,
                   x: viewed_highlight_data.x,
                 }}>
                 <div className="box is-dark is-marginless"
