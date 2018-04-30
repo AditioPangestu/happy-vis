@@ -2,7 +2,7 @@
   "data": [
     {
       "name": "Eastern Asia", 
-      "coordinate": [ 100.427898, 35.785305],
+      "coordinate": [ 110.427898, 37.785305],
       "color": "#71bf45",
       "zoom": 4
     },
@@ -10,7 +10,7 @@
       "name": "Western Europe", 
       "coordinate": [ -3.446869, 61.012153],
       "color": "#00a65e",
-      "zoom": 2.7
+      "zoom": 2.6
     },
     {
       "name": "Southeastern Asia", 
@@ -28,7 +28,7 @@
       "name": "Sub-Saharan Africa", 
       "coordinate": [ 10.299435, -3.557404],
       "color": "#ed008c",
-      "zoom": 2.7
+      "zoom": 2.6
     },
     {
       "name": "Southern Asia", 
@@ -40,7 +40,7 @@
       "name": "Central and Eastern Europe", 
       "coordinate": [ 100.014944, 62.232679],
       "color": "#ac54a0",
-      "zoom": 2.3
+      "zoom": 2.2
     },
     {
       "name": "Latin America and Caribbean", 
@@ -50,7 +50,7 @@
     },
     {
       "name": "Middle East and Northern Africa", 
-      "coordinate": [ 22.0715, 28.41565],
+      "coordinate": [ 23.0715, 28.41565],
       "color": "#231f20",
       "zoom": 4.4
     },
