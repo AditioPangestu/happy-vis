@@ -30,12 +30,14 @@ class Vis extends Component {
       highlighted_data : {},
       max_happy_score:0,
       min_happy_score:0,
+      scroll_index : {index : 0, update:true},
     };
     this.onChangeDropdown = this.onChangeDropdown.bind(this);
     this.preproccesMapData = this.preproccesMapData.bind(this);
     this.handleBubbleHover = this.handleBubbleHover.bind(this);
     this.handleHover = this.handleHover.bind(this);
     this.onRankedHover = this.onRankedHover.bind(this);
+    this.onWheel = this.onWheel.bind(this);
   }
 
   componentWillMount(){
@@ -230,6 +232,27 @@ class Vis extends Component {
     }
   }
 
+  onWheel(event){
+    event.preventDefault();
+    if (event.deltaY < 0) {
+      const scroll_index = this.state.scroll_index.index - 1;
+      this.setState({
+        scroll_index: {
+          index : scroll_index < 0 ? 0 : scroll_index,
+          update : true,
+        }
+      });
+    } else {
+      const scroll_index = this.state.scroll_index.index + 1;
+      this.setState({
+        scroll_index: {
+          index : (scroll_index > (Math.ceil(this.state.data.aggregates[0].data.length / 10)-1) ? Math.ceil(this.state.data.aggregates[0].data.length / 10)-1 : scroll_index),
+          update : true
+        }
+      });
+    }
+  }
+
   render(){
     if (this.state.data.aggregates.length != 0){
       return (
@@ -247,6 +270,86 @@ class Vis extends Component {
                   handleHover={this.handleHover}
                   map_highlighted_data={this.state.map_highlighted_data}/>
                 
+              </div>
+              <div className="column"
+                style={{ marginRight: "1rem"}}>
+                <div>
+                  <p className="has-text-left">in</p>
+                  <div className="level is-marginless">
+                    <div className="level-left">
+                      <div className="level-item"
+                        style={{ marginRight: ".3rem" }}>
+                        <div className="control">
+                          <div className="select is-small"
+                            style={{ width: "135px" }}>
+                            <select onChange={this.onChangeDropdown}>
+                              <option value="All">All</option>
+                              <option value="Eastern Asia">Eastern Asia</option>
+                              <option value="Western Europe">Western Europe</option>
+                              <option value="Southeastern Asia">Southeastern Asia</option>
+                              <option value="North America">North America</option>
+                              <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
+                              <option value="Southern Asia">Southern Asia</option>
+                              <option value="Central and Eastern Europe">Central and Eastern Europe</option>
+                              <option value="Latin America and Caribbean">Latin America and Caribbean</option>
+                              <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
+                              <option value="Australia and New Zealand">Australia and New Zealand</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="level-item">
+                        <p className="title is-7 has-text-left">Region</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="control">
+                    <div className="select is-small"
+                      style={{ marginTop: ".3rem" }}>
+                      <select>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="title is-7" style={{ margin: ".5rem 0 .5rem" }}>Top {this.state.top_3.length} Countries</p>
+                    {_.map(this.state.top_3, (datum, index) => {
+                      return (
+                        <div
+                          onMouseOver={() => { this.onRankedHover(datum.country) }}
+                          onMouseOut={() => { this.handleBubbleHover({}, {}) }}
+                          className="content is-marginless"
+                          key={index}>
+                          <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
+                          <RankedVis
+                            color={datum.color}
+                            x={parseFloat(datum.happiness_score)}
+                            x_domain={this.state.max_happy_score} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div>
+                    <p className="title is-7" style={{ margin: "0.5rem 0" }}>Worst {this.state.down_3.length} Countries</p>
+                    {_.map(this.state.down_3, (datum, index) => {
+                      return (
+                        <div
+                          onMouseOver={() => { this.onRankedHover(datum.country) }}
+                          onMouseOut={() => { this.handleBubbleHover({}, {}) }}
+                          className="content is-marginless"
+                          key={index}>
+                          <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
+                          <RankedVis
+                            color={datum.color}
+                            x={parseFloat(datum.happiness_score)}
+                            x_domain={this.state.max_happy_score} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
               <div className="column"
                 style={{
@@ -271,86 +374,6 @@ class Vis extends Component {
                   </p>
                 </div>
                 
-              </div>
-              <div className="column"
-                style={{marginLeft : "1rem"}}>
-                <div>
-                  <p className="has-text-left">in</p>
-                  <div className="level is-marginless">
-                    <div className="level-left">
-                      <div className="level-item"
-                        style={{marginRight:".3rem"}}>
-                        <div className="control">
-                          <div className="select is-small"
-                            style={{width:"135px"}}>
-                              <select onChange={this.onChangeDropdown}>
-                                <option value="All">All</option>
-                                <option value="Eastern Asia">Eastern Asia</option>
-                                <option value="Western Europe">Western Europe</option>
-                                <option value="Southeastern Asia">Southeastern Asia</option>
-                                <option value="North America">North America</option>
-                                <option value="Sub-Saharan Africa">Sub-Saharan Africa</option>
-                                <option value="Southern Asia">Southern Asia</option>
-                                <option value="Central and Eastern Europe">Central and Eastern Europe</option>
-                                <option value="Latin America and Caribbean">Latin America and Caribbean</option>
-                                <option value="Middle East and Northern Africa">Middle East and Northern Africa</option>
-                                <option value="Australia and New Zealand">Australia and New Zealand</option>
-                              </select>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="level-item">
-                        <p className="title is-7 has-text-left">Region</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="control">
-                    <div className="select is-small"
-                      style={{ marginTop: ".3rem" }}>
-                      <select>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                        <option value="2015">2015</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="title is-7" style={{ margin: ".5rem 0 .5rem" }}>Top {this.state.top_3.length} Countries</p>
-                    {_.map(this.state.top_3,(datum, index)=>{
-                      return (
-                        <div
-                          onMouseOver={() => { this.onRankedHover(datum.country) }}
-                          onMouseOut={() => { this.handleBubbleHover({}, {}) }}
-                          className="content is-marginless"
-                          key={index}>
-                          <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
-                          <RankedVis
-                            color={datum.color}
-                            x={parseFloat(datum.happiness_score)}
-                            x_domain={this.state.max_happy_score}/>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div>
-                    <p className="title is-7" style={{ margin: "0.5rem 0" }}>Worst {this.state.down_3.length} Countries</p>
-                    {_.map(this.state.down_3,(datum, index)=>{
-                      return (
-                        <div
-                          onMouseOver={()=>{this.onRankedHover(datum.country)}}
-                          onMouseOut={()=>{this.handleBubbleHover({},{})}}
-                          className="content is-marginless"
-                          key={index}>
-                          <p className="is-size-7 is-marginless">#{index + 1 + " "}{datum.country + ", "}{parseFloat(datum.happiness_score).toFixed(2)}</p>
-                          <RankedVis
-                            color={datum.color}
-                            x={parseFloat(datum.happiness_score)}
-                            x_domain={this.state.max_happy_score}/>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
               </div>
             </div>
             <div className="columns is-gapless is-marginless">
@@ -385,36 +408,40 @@ class Vis extends Component {
                           return <p className="is-size-7 title__bar">{this.state.data.aggregates[i].name} Score</p>;
                         }
                       })()}
-                      <BubbleVis
-                        viewed_region={this.state.viewed_region}
-                        first={i == 0}
-                        highlighted_data={
-                          (()=>{
-                            if (!_.isEmpty(this.state.highlighted_data)){
-                              if(this.state.viewed_region == "All"){
-                                return {
-                                  country_name: this.state.highlighted_data.country,
-                                  region_name: this.state.highlighted_data.region,
-                                  value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                      <div onWheel={this.onWheel}>
+                        <BubbleVis
+                          scroll_index={this.state.scroll_index}
+                          setScrollIndex={function(value){this.setState({scroll_index:value})}.bind(this)}
+                          viewed_region={this.state.viewed_region}
+                          first={i == 0}
+                          highlighted_data={
+                            (()=>{
+                              if (!_.isEmpty(this.state.highlighted_data)){
+                                if(this.state.viewed_region == "All"){
+                                  return {
+                                    country_name: this.state.highlighted_data.country,
+                                    region_name: this.state.highlighted_data.region,
+                                    value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                                  }
+                                } else {
+                                  return {
+                                    country_name: this.state.highlighted_data.country,
+                                    value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
+                                  }
                                 }
                               } else {
-                                return {
-                                  country_name: this.state.highlighted_data.country,
-                                  value: this.state.highlighted_data[this.state.data.aggregates[i].attribute_name]
-                                }
+                                return {}
                               }
-                            } else {
-                              return {}
-                            }
-                          })()
-                        }
-                        handleBubbleHover={this.handleBubbleHover}
-                        raw={this.state.data.raw}
-                        name={this.state.data.aggregates[i].name}
-                        width={this.state.width}
-                        height={400}
-                        data={this.state.data.aggregates[i].data}
-                        y_domain={this.state.data.aggregates[i].max_value} />
+                            })()
+                          }
+                          handleBubbleHover={this.handleBubbleHover}
+                          raw={this.state.data.raw}
+                          name={this.state.data.aggregates[i].name}
+                          width={this.state.width}
+                          height={400}
+                          data={this.state.data.aggregates[i].data}
+                          y_domain={this.state.data.aggregates[i].max_value} />
+                      </div>
                     </div>
                   );
                 }
