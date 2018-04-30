@@ -447,6 +447,49 @@ class Vis extends Component {
                 }
                 return bubbles;
               })()}
+              <div className="column" style={{ alignItems : "flex-end"}}>
+                {(()=>{
+                  const length = Math.ceil(this.state.data.aggregates[0].data.length/10);
+                  return _.map(_.range(0,length),(value, index)=>{
+                    if (value == (length-1)) {
+                      if (value == 0){
+                        return (
+                          <div key={value}>
+                            <a className="button is-small is-dark"
+                              style={{ width: "33.56px", marginBottom: "10px", marginTop: "2.9rem" }}>All</a>
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <div key={value}>
+                            <a className={"button is-small " + ((value == this.state.scroll_index.index) ?"is-dark":"")}
+                              onClick={function () { this.setState({ scroll_index: { index: value, update: true } }) }.bind(this)}
+                              style={{ width: "33.56px", marginBottom: "10px" }}>{value+1}</a>
+                          </div>
+                        )
+                      }
+                    } else {
+                      if (value == 0) {
+                        return (
+                          <div key={value}>
+                            <a className={"button is-small " + ((value == this.state.scroll_index.index) ?"is-dark":"")}
+                              onClick={function () { this.setState({ scroll_index: { index: value, update: true } })}.bind(this)}
+                              style={{ width: "33.56px", marginBottom: "10px", marginTop: "2.9rem" }}>{value+1}</a>
+                          </div>
+                        )
+                      } else {
+                          return (
+                            <div key={value}>
+                              <a className={"button is-small " + ((value == this.state.scroll_index.index) ?"is-dark":"")}
+                                onClick={function () { this.setState({scroll_index : { index: value, update: true }}) }.bind(this)}
+                                style={{ width: "33.56px", marginBottom: "10px"}}>{value+1}</a>
+                            </div>
+                          )
+                      }
+                    }
+                  })
+                })()}
+              </div>
             </div>
           </section>
         </div>

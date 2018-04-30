@@ -203,7 +203,20 @@ export default class BubbleVis extends Component {
         x_ticks: x_ticks,
       });
     }
-    if (!_.isEqual(this.props.highlighted_data, nextProps.highlighted_data)) {
+    if (!_.isEqual(this.props.scroll_index, nextProps.scroll_index)) {
+      if (nextProps.scroll_index.update) {
+        const {
+          ticks,
+          x_ticks,
+          preprocessed_data
+        } = this.preprocessedData(nextProps.data, nextProps.y_domain, nextProps.scroll_index.index);
+        this.setState({
+          preprocessed_data: preprocessed_data,
+          ticks: ticks,
+          x_ticks: x_ticks,
+        });
+      }
+    } else if (!_.isEqual(this.props.highlighted_data, nextProps.highlighted_data)) {
       if (_.isEmpty(nextProps.highlighted_data)) {
         const {
           ticks,
@@ -228,21 +241,6 @@ export default class BubbleVis extends Component {
           ticks: ticks,
           x_ticks: x_ticks,
         });
-      }
-    } else {
-      if (!_.isEqual(this.props.scroll_index,nextProps.scroll_index)) {
-        if (nextProps.scroll_index.update){
-          const {
-            ticks,
-            x_ticks,
-            preprocessed_data
-          } = this.preprocessedData(nextProps.data, nextProps.y_domain, nextProps.scroll_index.index);
-          this.setState({
-            preprocessed_data: preprocessed_data,
-            ticks: ticks,
-            x_ticks: x_ticks,
-          });
-        }
       }
     }
   }
@@ -336,7 +334,7 @@ export default class BubbleVis extends Component {
           data={_.map(this.state.preprocessed_data,(datum, index)=>{
             return {
               x0 : 0,
-              x : this.props.y_domain,
+              x : datum.x,
               y0 : ((index)*1+.5),
               y : ((index+1)*1+.5),
               opacity : 0
