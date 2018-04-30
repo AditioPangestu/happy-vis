@@ -462,9 +462,16 @@ class Vis extends Component {
                       } else {
                         return (
                           <div key={value}>
-                            <a className={"button is-small " + ((value == this.state.scroll_index.index) ?"is-dark":"")}
-                              onClick={function () { this.setState({ scroll_index: { index: value, update: true } }) }.bind(this)}
-                              style={{ width: "33.56px", marginBottom: "10px" }}>{value+1}</a>
+                            <div>
+                              <a className={"button is-small " + ((value == this.state.scroll_index.index) ?"is-dark":"")}
+                                onClick={function () { this.setState({ scroll_index: { index: value, update: true } }) }.bind(this)}
+                                style={{ width: "33.56px", marginBottom: "10px" }}>{value+1}</a>
+                            </div>
+                            <div>
+                              <a className={"button is-small " + ((this.state.scroll_index.index=="All") ?"is-dark":"")}
+                                onClick={function () { this.setState({ scroll_index: { index: "All", update: true } }) }.bind(this)}
+                                style={{ width: "33.56px", marginBottom: "10px" }}>All</a>
+                            </div>
                           </div>
                         )
                       }
