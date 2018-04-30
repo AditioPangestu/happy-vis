@@ -232,6 +232,37 @@ class Vis extends Component {
     }
   }
 
+  onYearChange(e){
+    const { value } = e.target;
+    axios.get(`./src/data/ranked_${value}.json`)
+      .then((response) => {
+        const { data } = response;
+        const { map_data, max_happy_score, min_happy_score } = this.preproccesMapData(data, this.state.country_colors);
+        if(this.state.viewed_region == "All"){
+          const aggregates = this.preproccesData(data, this.state.regions, max_happy_score, min_happy_score);
+          this.setState({
+            max_happy_score: max_happy_score,
+            min_happy_score: min_happy_score,
+            map_data: map_data,
+            data: { raw: data, aggregates: aggregates },
+            top_3: this.preproccesRankedData(data, max_happy_score, min_happy_score, false),
+            down_3: this.preproccesRankedData(data, max_happy_score, min_happy_score, true),
+          })
+        } else {
+          const { aggregates, map_data } = this.preproccesregionData(data, _.find(this.state.regions, { name: this.state.viewed_region }), this.state.country_colors);
+          const region_data = _.filter(data, (datum) => { return (datum.region == this.state.viewed_region) });
+          this.setState({
+            max_happy_score: max_happy_score,
+            min_happy_score: min_happy_score,
+            map_data: map_data,
+            data: { raw: data, aggregates: aggregates },
+            top_3: this.preproccesRankedData(region_data, this.state.max_happy_score, this.state.min_happy_score, false),
+            down_3: this.preproccesRankedData(region_data, this.state.max_happy_score, this.state.min_happy_score, true)
+          });
+        }
+      });
+  }
+
   onWheel(event){
     event.preventDefault();
     if (this.state.scroll_index.index != "All"){
@@ -308,7 +339,7 @@ class Vis extends Component {
                   <div className="control">
                     <div className="select is-small"
                       style={{ marginTop: ".3rem" }}>
-                      <select>
+                      <select onChange={this.onYearChange.bind(this)}>
                         <option value="2017">2017</option>
                         <option value="2016">2016</option>
                         <option value="2015">2015</option>
@@ -454,14 +485,7 @@ class Vis extends Component {
                   const length = Math.ceil(this.state.data.aggregates[0].data.length/10);
                   return _.map(_.range(0,length),(value, index)=>{
                     if (value == (length-1)) {
-                      if (value == 0){
-                        return (
-                          <div key={value}>
-                            <a className="button is-small is-dark"
-                              style={{ width: "33.56px", marginBottom: "10px", marginTop: "2.9rem" }}>All</a>
-                          </div>
-                        )
-                      } else {
+                      if (value != 0){
                         return (
                           <div key={value}>
                             <div>
