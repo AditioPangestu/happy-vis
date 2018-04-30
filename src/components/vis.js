@@ -234,7 +234,7 @@ class Vis extends Component {
 
   onWheel(event){
     event.preventDefault();
-    if(this.state.index != "All"){
+    if (this.state.scroll_index.index != "All"){
       if (event.deltaY < 0) {
         const scroll_index = this.state.scroll_index.index - 1;
         this.setState({
