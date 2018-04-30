@@ -1,9 +1,10 @@
+process.env.NODE_ENV = 'development'
 module.exports = {
   entry: [
     './src/index.js'
   ],
   output: {
-    path: __dirname,
+    path: __dirname + '/../production',
     publicPath: '/',
     filename: 'bundle.js'
   },
