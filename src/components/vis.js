@@ -200,12 +200,14 @@ class Vis extends Component {
   }
 
   onRankedHover(country_name) {
-    const datum_index = _.findIndex(this.state.data.raw, (datum) => {
-      return datum.country == country_name;
-    });
-    if (datum_index != -1) {
-      const datum = this.state.data.raw[datum_index];
-      this.handleBubbleHover(datum, datum);
+    if(this.state.viewed_region != "All"){
+      const datum_index = _.findIndex(this.state.data.raw, (datum) => {
+        return datum.country == country_name;
+      });
+      if (datum_index != -1) {
+        const datum = this.state.data.raw[datum_index];
+        this.handleBubbleHover(datum, datum);
+      }
     }
   }
 
