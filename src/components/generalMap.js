@@ -269,9 +269,8 @@ class GeneralMap extends Component {
     if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       return (
         <div>
-          <button onClick={this.handleZoomIn}>+</button>
-          <button onClick={this.handleZoomOut}>-</button>
-          <button onClick={this.handleContinentReset}>Reset</button>
+          
+          
           {/* <button onClick={this.onViewLoaded}>asdf</button> */}
 
           <Motion
@@ -334,6 +333,10 @@ class GeneralMap extends Component {
             </ComposableMap>
             )}
           </Motion>
+
+          <button onClick={this.handleZoomIn}>+</button>
+          <button onClick={this.handleZoomOut}>-</button>
+          <button onClick={this.handleContinentReset}>Reset</button>
         </div>
       );
     } else {
