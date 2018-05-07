@@ -57,7 +57,9 @@ class GeneralMap extends Component {
       },
       country_colors: [],
       disableOptimization: false,
-      tooltips_data: {}
+      tooltips_data: {},
+      disablePanning: false,
+      continent: {},
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this)
@@ -69,6 +71,7 @@ class GeneralMap extends Component {
     this.handleLeave = this.handleLeave.bind(this)
     this.onViewLoaded = this.onViewLoaded.bind(this)
     this.viewGeographyLatLong = this.viewGeographyLatLong.bind(this)
+    this.handleContinentReset = this.handleContinentReset.bind(this)
   }
 
   viewGeographyLatLong(geography, evt) {
@@ -146,19 +149,33 @@ class GeneralMap extends Component {
     this.setState({
       
       zoom: this.state.zoom * 2,
+      disablePanning: false,
     })
   }
   handleZoomOut() {
     this.setState({
       
       zoom: this.state.zoom / 2,
+      disablePanning: false,
     })
   }
+
+  handleContinentReset() {
+    if (!_.isEmpty(this.state.continent)) {
+
+      this.handleContinentClick(this.state.continent)
+    } else {
+      this.handleReset()
+    }
+  }
+
   handleContinentClick(continent) {
     this.setState({
+      continent: continent,
       disableOptimization: true,
       zoom: continent.zoom,
       center: continent.coordinate,
+      disablePanning: true,
     }, () => {
       this.setState({
         disableOptimization: false,
@@ -168,9 +185,11 @@ class GeneralMap extends Component {
 
   handleReset() {
     this.setState({
+      continent: {},
       disableOptimization: true,
       center: [0, 20],
       zoom: 1,
+      disablePanning: false,
     }, () => {
       this.setState({
         disableOptimization: false
@@ -250,7 +269,9 @@ class GeneralMap extends Component {
     if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       return (
         <div>
-
+          <button onClick={this.handleZoomIn}>+</button>
+          <button onClick={this.handleZoomOut}>-</button>
+          <button onClick={this.handleContinentReset}>Reset</button>
           {/* <button onClick={this.onViewLoaded}>asdf</button> */}
 
           <Motion
@@ -274,7 +295,7 @@ class GeneralMap extends Component {
               width={635.406400747}
               height={350}
             >
-              <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning>
+              <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning={this.state.disablePanning}>
                 <Geographies geography="./src/data/world-50m.json" disableOptimization={this.state.disableOptimization}>
                   {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
 
