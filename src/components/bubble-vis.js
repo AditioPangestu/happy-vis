@@ -227,7 +227,8 @@ export default class BubbleVis extends Component {
         const {
           ticks,
           x_ticks,
-          preprocessed_data
+          preprocessed_data,
+          sliced_data
         } = this.preprocessedData(nextProps.data, nextProps.y_domain, nextProps.scroll_index.index);
         this.setState({
           preprocessed_data: preprocessed_data,
