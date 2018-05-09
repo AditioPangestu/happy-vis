@@ -316,19 +316,19 @@ class GeneralMap extends Component {
                           default: {
                             fill: fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color,
                             stroke: "#607D8B",
-                            strokeWidth: 0.3,
+                            strokeWidth: 0.1,
                             outline: "none",
                           },
                           hover: {
                             fill: (fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color == "#ffffff" ? "#ffffff":"#607D8B"),
                             stroke: "#607D8B",
-                            strokeWidth: 0.3,
+                            strokeWidth: 0.1,
                             outline: "none",
                           },
                           pressed: {
                             fill: fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color,
                             stroke: "#607D8B",
-                            strokeWidth: 0.3,
+                            strokeWidth: 0.1,
                             outline: "none",
                           }
                         }}
@@ -345,23 +345,29 @@ class GeneralMap extends Component {
             bottom : "10px",
             right : "10px",
           }}>
-            <div className="buttons">
-              <a className="button is-small" onClick={this.handleZoomIn}>
-                <span className="icon is-small">
-                  <i className="fas fa-search-plus"></i>
-                </span>
-              </a>
-              <a className="button is-small" onClick={this.handleZoomOut}>
-                <span className="icon is-small">
-                  <i className="fas fa-search-minus"></i>
-                </span>
-              </a>
-              <a className="button is-small" onClick={this.handleContinentReset}>
-                <span className="icon is-small">
-                  <i className="fas fa-compress"></i>
-                </span>
-              </a>
-            </div>
+          {(()=>{
+            if(this.props.viewed == "All"){
+              return (
+                <div className="buttons">
+                  <a className="button is-small" onClick={this.handleZoomIn}>
+                    <span className="icon is-small">
+                      <i className="fas fa-search-plus"></i>
+                    </span>
+                  </a>
+                  <a className="button is-small" onClick={this.handleZoomOut}>
+                    <span className="icon is-small">
+                      <i className="fas fa-search-minus"></i>
+                    </span>
+                  </a>
+                  <a className="button is-small" onClick={this.handleContinentReset}>
+                    <span className="icon is-small">
+                      <i className="fas fa-compress"></i>
+                    </span>
+                  </a>
+                </div>
+              )
+            }
+          })()}
           </div>
         </div>
       );
