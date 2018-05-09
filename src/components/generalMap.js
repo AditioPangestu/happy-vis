@@ -60,6 +60,7 @@ class GeneralMap extends Component {
       tooltips_data: {},
       disablePanning: true,
       continent: {},
+      is_clicked: false,
     };
 
     this.handleZoomIn = this.handleZoomIn.bind(this)
@@ -72,6 +73,7 @@ class GeneralMap extends Component {
     this.onViewLoaded = this.onViewLoaded.bind(this)
     this.viewGeographyLatLong = this.viewGeographyLatLong.bind(this)
     this.handleContinentReset = this.handleContinentReset.bind(this)
+    this.onZoomWheel = this.onZoomWheel.bind(this)
   }
 
   viewGeographyLatLong(geography, evt) {
@@ -82,7 +84,6 @@ class GeneralMap extends Component {
     if (_.isEmpty(this.state.tooltips_data)) {
       return
     }
-    // console.log(this.state.tooltips_data)
     const x = this.state.tooltips_data[passed_data.country][0];
     const y = this.state.tooltips_data[passed_data.country][1];
 
@@ -108,38 +109,30 @@ class GeneralMap extends Component {
   }
 
   handleMove(geography, evt) {
-    const x = evt.clientX
-    const y = evt.clientY + window.pageYOffset
-    // const y = evt.clientY 
-    const index = _.findIndex(this.props.raw, (datum)=>{
-      return datum.country == geography.properties.name
-    });
-    if ((index != -1) && ((this.props.raw[index].region == this.props.viewed) || (this.props.viewed=="All"))){
-      const datum = this.props.raw[index];
-      this.tip.show(`
-        <div>
-          <p class="is-size-7"><b>${datum.country+" "}</b><span class="is-size-7">${parseFloat(datum.happiness_score).toFixed(2)}</span></p>
-        </div>
-      `)
-      this.tip.position({
-        pageX: x,
-        pageY: y
-      })
-      this.props.handleHover(datum);
-    } else {
-      // this.tip.show(`
-      //   <div class="tooltip-inner">
-      //     ${geography.properties.name}
-      //   </div>
-      // `)
-      // this.tip.position({
-      //   pageX: x,
-      //   pageY: y
-      // })
-      this.props.handleHover({});
+    if(!this.state.is_clicked){
+      const x = evt.clientX
+      const y = evt.clientY + window.pageYOffset
+      const index = _.findIndex(this.props.raw, (datum)=>{
+        return datum.country == geography.properties.name
+      });
+      if ((index != -1) && ((this.props.raw[index].region == this.props.viewed) || (this.props.viewed=="All"))){
+        const datum = this.props.raw[index];
+        this.tip.show(`
+          <div>
+            <p class="is-size-7"><b>${datum.country+" "}</b><span class="is-size-7">${parseFloat(datum.happiness_score).toFixed(2)}</span></p>
+          </div>
+        `)
+        this.tip.position({
+          pageX: x,
+          pageY: y
+        })
+        this.props.handleHover(datum);
+      } else {
+        this.props.handleHover({});
+      }
     }
-    var defaultStyle = this.state.default_style
   }
+
   handleLeave() {
     this.tip.hide();
     this.props.handleHover("");
@@ -153,10 +146,11 @@ class GeneralMap extends Component {
       center: [0, 19.9],
     })
   }
+
   handleZoomOut() {
+    const new_zoom = this.state.zoom - this.state.zoom / 2;
     this.setState({
-      
-      zoom: this.state.zoom / 2,
+      zoom: (new_zoom < 1 ? 1:new_zoom),
       disablePanning: false,
       center: [0, 19.9],
     })
@@ -223,6 +217,15 @@ class GeneralMap extends Component {
       })
   }
 
+  onZoomWheel(event){
+    event.preventDefault();
+      if (event.deltaY < 0) {
+        this.handleZoomIn();
+      } else {
+        this.handleZoomOut();
+      }
+  }
+
   componentDidMount() {
     this.tip = tooltip();
     this.tip.create()
@@ -266,11 +269,15 @@ class GeneralMap extends Component {
     var fill_color = this.props.country_colors
     if (this.state.continents.length > 0 && this.props.country_colors.length > 0) {
       return (
-        <div>
-          
-          
+        <div
+          onWheel={this.onZoomWheel}
+          onMouseDown={() => { this.handleLeave(); this.setState({ is_clicked: true }) }}
+          onMouseUp={() => { this.setState({ is_clicked: false }) }}
+          onMouseLeave={() => { this.setState({ is_clicked: false }) }}
+          style={{
+            position : "relative"
+          }}>
           {/* <button onClick={this.onViewLoaded}>asdf</button> */}
-
           <Motion
             defaultStyle={{
               zoom: 1,
@@ -293,7 +300,8 @@ class GeneralMap extends Component {
               height={350}
             >
               <ZoomableGroup center={[x,y]} zoom={zoom} disablePanning={this.state.disablePanning}>
-                <Geographies geography="./src/data/world-50m.json" disableOptimization={this.state.disableOptimization}>
+                  <Geographies geography="./src/data/world-50m.json"
+                    disableOptimization={this.state.disableOptimization}>
                   {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (
 
                       <Geography
@@ -317,7 +325,7 @@ class GeneralMap extends Component {
                             outline: "none",
                           },
                           pressed: {
-                            fill: "#ffffff",
+                            fill: fill_color[fill_color.findIndex(obj => obj.name == geography.properties.name)].color,
                             stroke: "#607D8B",
                             strokeWidth: 0.3,
                             outline: "none",
@@ -331,10 +339,29 @@ class GeneralMap extends Component {
             </ComposableMap>
             )}
           </Motion>
-
-          <button onClick={this.handleZoomIn}>+</button>
-          <button onClick={this.handleZoomOut}>-</button>
-          <button onClick={this.handleContinentReset}>Reset</button>
+          <div style={{
+            position : "absolute",
+            bottom : "10px",
+            right : "10px",
+          }}>
+            <div className="buttons">
+              <a className="button is-small" onClick={this.handleZoomIn}>
+                <span className="icon is-small">
+                  <i className="fas fa-search-plus"></i>
+                </span>
+              </a>
+              <a className="button is-small" onClick={this.handleZoomOut}>
+                <span className="icon is-small">
+                  <i className="fas fa-search-minus"></i>
+                </span>
+              </a>
+              <a className="button is-small" onClick={this.handleContinentReset}>
+                <span className="icon is-small">
+                  <i className="fas fa-compress"></i>
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       );
     } else {
