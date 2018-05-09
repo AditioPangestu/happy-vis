@@ -139,12 +139,13 @@ class GeneralMap extends Component {
   }
 
   handleZoomIn() {
-    this.setState({
-      
-      zoom: this.state.zoom * 2,
-      disablePanning: false,
-      center: [0, 19.9],
-    })
+    if(this.state.zoom <= 16) {
+      this.setState({
+        zoom: this.state.zoom + this.state.zoom/2,
+        disablePanning: false,
+        center: [0, 19.9],
+      })
+    }
   }
 
   handleZoomOut() {
