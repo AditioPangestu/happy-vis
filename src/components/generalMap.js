@@ -58,7 +58,7 @@ class GeneralMap extends Component {
       country_colors: [],
       disableOptimization: false,
       tooltips_data: {},
-      disablePanning: false,
+      disablePanning: true,
       continent: {},
     };
 
@@ -150,6 +150,7 @@ class GeneralMap extends Component {
       
       zoom: this.state.zoom * 2,
       disablePanning: false,
+      center: [0, 19.9],
     })
   }
   handleZoomOut() {
@@ -157,16 +158,13 @@ class GeneralMap extends Component {
       
       zoom: this.state.zoom / 2,
       disablePanning: false,
+      center: [0, 19.9],
     })
   }
 
   handleContinentReset() {
-    if (!_.isEmpty(this.state.continent)) {
-
-      this.handleContinentClick(this.state.continent)
-    } else {
-      this.handleReset()
-    }
+    this.handleReset()
+    
   }
 
   handleContinentClick(continent) {
@@ -189,7 +187,7 @@ class GeneralMap extends Component {
       disableOptimization: true,
       center: [0, 20],
       zoom: 1,
-      disablePanning: false,
+      disablePanning: true,
     }, () => {
       this.setState({
         disableOptimization: false
